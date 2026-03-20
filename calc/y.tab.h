@@ -54,13 +54,17 @@ extern int yydebug;
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
-    tMAIN = 258,                   /* tMAIN  */
-    tVAL = 259,                    /* tVAL  */
-    tINT = 260,                    /* tINT  */
-    tEG = 261,                     /* tEG  */
-    tFI = 262,                     /* tFI  */
-    tNAME = 263,                   /* tNAME  */
-    tNB = 264                      /* tNB  */
+    tFL = 258,                     /* tFL  */
+    tEGAL = 259,                   /* tEGAL  */
+    tPO = 260,                     /* tPO  */
+    tPF = 261,                     /* tPF  */
+    tSOU = 262,                    /* tSOU  */
+    tADD = 263,                    /* tADD  */
+    tDIV = 264,                    /* tDIV  */
+    tMUL = 265,                    /* tMUL  */
+    tERROR = 266,                  /* tERROR  */
+    tNB = 267,                     /* tNB  */
+    tID = 268                      /* tID  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -69,24 +73,26 @@ extern int yydebug;
 #define YYEOF 0
 #define YYerror 256
 #define YYUNDEF 257
-#define tMAIN 258
-#define tVAL 259
-#define tINT 260
-#define tEG 261
-#define tFI 262
-#define tNAME 263
-#define tNB 264
+#define tFL 258
+#define tEGAL 259
+#define tPO 260
+#define tPF 261
+#define tSOU 262
+#define tADD 263
+#define tDIV 264
+#define tMUL 265
+#define tERROR 266
+#define tNB 267
+#define tID 268
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 17 "c.y"
- int nb; char var[64]; 
-#line 18 "c.y"
- int nb1; int val; 
+#line 7 "calc.y"
+ int nb; char var; 
 
-#line 90 "y.tab.h"
+#line 96 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

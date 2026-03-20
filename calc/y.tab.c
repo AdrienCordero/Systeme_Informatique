@@ -67,23 +67,14 @@
 
 
 /* First part of user prologue.  */
-#line 1 "c.y"
+#line 1 "calc.y"
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
+int var[26];
 void yyerror(char *s);
-//var est une mémoire qui contient la valeur
-char* var[100];
-typedef struct {
-  char name[64];
-  int val;  
-} int_val_t;
-int_val_t table_var[100];
-int nb_var = 0;
-int val;
 
-#line 87 "y.tab.c"
+#line 78 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -127,13 +118,17 @@ extern int yydebug;
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
-    tMAIN = 258,                   /* tMAIN  */
-    tVAL = 259,                    /* tVAL  */
-    tINT = 260,                    /* tINT  */
-    tEG = 261,                     /* tEG  */
-    tFI = 262,                     /* tFI  */
-    tNAME = 263,                   /* tNAME  */
-    tNB = 264                      /* tNB  */
+    tFL = 258,                     /* tFL  */
+    tEGAL = 259,                   /* tEGAL  */
+    tPO = 260,                     /* tPO  */
+    tPF = 261,                     /* tPF  */
+    tSOU = 262,                    /* tSOU  */
+    tADD = 263,                    /* tADD  */
+    tDIV = 264,                    /* tDIV  */
+    tMUL = 265,                    /* tMUL  */
+    tERROR = 266,                  /* tERROR  */
+    tNB = 267,                     /* tNB  */
+    tID = 268                      /* tID  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -142,24 +137,26 @@ extern int yydebug;
 #define YYEOF 0
 #define YYerror 256
 #define YYUNDEF 257
-#define tMAIN 258
-#define tVAL 259
-#define tINT 260
-#define tEG 261
-#define tFI 262
-#define tNAME 263
-#define tNB 264
+#define tFL 258
+#define tEGAL 259
+#define tPO 260
+#define tPF 261
+#define tSOU 262
+#define tADD 263
+#define tDIV 264
+#define tMUL 265
+#define tERROR 266
+#define tNB 267
+#define tID 268
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 17 "c.y"
- int nb; char var[64]; 
-#line 18 "c.y"
- int nb1; int val; 
+#line 7 "calc.y"
+ int nb; char var; 
 
-#line 163 "y.tab.c"
+#line 160 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -182,16 +179,23 @@ enum yysymbol_kind_t
   YYSYMBOL_YYEOF = 0,                      /* "end of file"  */
   YYSYMBOL_YYerror = 1,                    /* error  */
   YYSYMBOL_YYUNDEF = 2,                    /* "invalid token"  */
-  YYSYMBOL_tMAIN = 3,                      /* tMAIN  */
-  YYSYMBOL_tVAL = 4,                       /* tVAL  */
-  YYSYMBOL_tINT = 5,                       /* tINT  */
-  YYSYMBOL_tEG = 6,                        /* tEG  */
-  YYSYMBOL_tFI = 7,                        /* tFI  */
-  YYSYMBOL_tNAME = 8,                      /* tNAME  */
-  YYSYMBOL_tNB = 9,                        /* tNB  */
-  YYSYMBOL_YYACCEPT = 10,                  /* $accept  */
-  YYSYMBOL_C = 11,                         /* C  */
-  YYSYMBOL_Decl = 12                       /* Decl  */
+  YYSYMBOL_tFL = 3,                        /* tFL  */
+  YYSYMBOL_tEGAL = 4,                      /* tEGAL  */
+  YYSYMBOL_tPO = 5,                        /* tPO  */
+  YYSYMBOL_tPF = 6,                        /* tPF  */
+  YYSYMBOL_tSOU = 7,                       /* tSOU  */
+  YYSYMBOL_tADD = 8,                       /* tADD  */
+  YYSYMBOL_tDIV = 9,                       /* tDIV  */
+  YYSYMBOL_tMUL = 10,                      /* tMUL  */
+  YYSYMBOL_tERROR = 11,                    /* tERROR  */
+  YYSYMBOL_tNB = 12,                       /* tNB  */
+  YYSYMBOL_tID = 13,                       /* tID  */
+  YYSYMBOL_YYACCEPT = 14,                  /* $accept  */
+  YYSYMBOL_Calculatrice = 15,              /* Calculatrice  */
+  YYSYMBOL_Calcul = 16,                    /* Calcul  */
+  YYSYMBOL_Expr = 17,                      /* Expr  */
+  YYSYMBOL_DivMul = 18,                    /* DivMul  */
+  YYSYMBOL_Terme = 19                      /* Terme  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -517,21 +521,21 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  5
+#define YYFINAL  12
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   8
+#define YYLAST   25
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  10
+#define YYNTOKENS  14
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  3
+#define YYNNTS  6
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  5
+#define YYNRULES  14
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  11
+#define YYNSTATES  26
 
 /* YYMAXUTOK -- Last valid token kind.  */
-#define YYMAXUTOK   264
+#define YYMAXUTOK   268
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -571,14 +575,15 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
-       5,     6,     7,     8,     9
+       5,     6,     7,     8,     9,    10,    11,    12,    13
 };
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    24,    24,    24,    25,    32
+       0,    14,    14,    14,    15,    16,    17,    18,    19,    20,
+      21,    22,    23,    24,    25
 };
 #endif
 
@@ -594,8 +599,9 @@ static const char *yysymbol_name (yysymbol_kind_t yysymbol) YY_ATTRIBUTE_UNUSED;
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-  "\"end of file\"", "error", "\"invalid token\"", "tMAIN", "tVAL",
-  "tINT", "tEG", "tFI", "tNAME", "tNB", "$accept", "C", "Decl", YY_NULLPTR
+  "\"end of file\"", "error", "\"invalid token\"", "tFL", "tEGAL", "tPO",
+  "tPF", "tSOU", "tADD", "tDIV", "tMUL", "tERROR", "tNB", "tID", "$accept",
+  "Calculatrice", "Calcul", "Expr", "DivMul", "Terme", YY_NULLPTR
 };
 
 static const char *
@@ -605,7 +611,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-7)
+#define YYPACT_NINF (-10)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -619,8 +625,9 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -3,    -5,     4,    -3,    -6,    -7,    -7,    -4,    -7,    -1,
-      -7
+      -4,     0,   -10,    13,     4,    -4,     8,    -7,   -10,   -10,
+      14,     0,   -10,   -10,   -10,     0,     0,     0,     0,   -10,
+      11,    -7,    -7,   -10,   -10,   -10
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -628,20 +635,21 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     0,     0,     2,     0,     1,     3,     0,     4,     0,
-       5
+       0,     0,    14,    13,     0,     3,     0,     8,    11,    13,
+       0,     0,     1,     2,     4,     0,     0,     0,     0,    12,
+       0,     7,     6,    10,     9,     5
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-      -7,     5,    -7
+     -10,    20,   -10,    -1,    -9,     6
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     2,     3
+       0,     4,     5,     6,     7,     8
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -649,32 +657,39 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-       7,     8,     1,     4,     5,     9,    10,     0,     6
+      10,     1,    17,    18,    12,     1,    21,    22,     2,     3,
+      20,    14,     2,     9,    25,    15,    16,    11,    15,    16,
+      19,    15,    16,    23,    24,    13
 };
 
 static const yytype_int8 yycheck[] =
 {
-       6,     7,     5,     8,     0,     9,     7,    -1,     3
+       1,     5,     9,    10,     0,     5,    15,    16,    12,    13,
+      11,     3,    12,    13,     3,     7,     8,     4,     7,     8,
+       6,     7,     8,    17,    18,     5
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     5,    11,    12,     8,     0,    11,     6,     7,     9,
-       7
+       0,     5,    12,    13,    15,    16,    17,    18,    19,    13,
+      17,     4,     0,    15,     3,     7,     8,     9,    10,     6,
+      17,    18,    18,    19,    19,     3
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    10,    11,    11,    12,    12
+       0,    14,    15,    15,    16,    16,    17,    17,    17,    18,
+      18,    18,    19,    19,    19
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     1,     2,     3,     5
+       0,     2,     2,     1,     2,     4,     3,     3,     1,     3,
+       3,     1,     3,     1,     1
 };
 
 
@@ -1137,30 +1152,74 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-  case 4: /* Decl: tINT tNAME tFI  */
-#line 25 "c.y"
-                      {
-        //printf("variable: %s", $2);
-        strcpy(table_var[nb_var].name, (yyvsp[-1].var));
-        nb_var++;
-        printf("nom : %s\n", table_var[nb_var-1].name);
-      }
-#line 1149 "y.tab.c"
+  case 4: /* Calcul: Expr tFL  */
+#line 15 "calc.y"
+                           { printf("> %d\n", (yyvsp[-1].nb)); }
+#line 1159 "y.tab.c"
     break;
 
-  case 5: /* Decl: tINT tNAME tEG tNB tFI  */
-#line 32 "c.y"
-                             {
-        strcpy(table_var[nb_var].name, (yyvsp[-3].var));
-        table_var[nb_var].val = (yyvsp[-1].val);
-        nb_var++;
-        printf("nom : %s, val : %d\n", table_var[nb_var-1].name, table_var[nb_var-1].val);
-      }
-#line 1160 "y.tab.c"
+  case 5: /* Calcul: tID tEGAL Expr tFL  */
+#line 16 "calc.y"
+                                     { var[(int)(yyvsp[-3].var)] = (yyvsp[-1].nb); }
+#line 1165 "y.tab.c"
+    break;
+
+  case 6: /* Expr: Expr tADD DivMul  */
+#line 17 "calc.y"
+                                   { (yyval.nb) = (yyvsp[-2].nb) + (yyvsp[0].nb); }
+#line 1171 "y.tab.c"
+    break;
+
+  case 7: /* Expr: Expr tSOU DivMul  */
+#line 18 "calc.y"
+                                   { (yyval.nb) = (yyvsp[-2].nb) - (yyvsp[0].nb); }
+#line 1177 "y.tab.c"
+    break;
+
+  case 8: /* Expr: DivMul  */
+#line 19 "calc.y"
+                         { (yyval.nb) = (yyvsp[0].nb); }
+#line 1183 "y.tab.c"
+    break;
+
+  case 9: /* DivMul: DivMul tMUL Terme  */
+#line 20 "calc.y"
+                                    { (yyval.nb) = (yyvsp[-2].nb) * (yyvsp[0].nb); }
+#line 1189 "y.tab.c"
+    break;
+
+  case 10: /* DivMul: DivMul tDIV Terme  */
+#line 21 "calc.y"
+                                    { (yyval.nb) = (yyvsp[-2].nb) / (yyvsp[0].nb); }
+#line 1195 "y.tab.c"
+    break;
+
+  case 11: /* DivMul: Terme  */
+#line 22 "calc.y"
+                        { (yyval.nb) = (yyvsp[0].nb); }
+#line 1201 "y.tab.c"
+    break;
+
+  case 12: /* Terme: tPO Expr tPF  */
+#line 23 "calc.y"
+                               { (yyval.nb) = (yyvsp[-1].nb); }
+#line 1207 "y.tab.c"
+    break;
+
+  case 13: /* Terme: tID  */
+#line 24 "calc.y"
+                      { (yyval.nb) = var[(yyvsp[0].var)]; }
+#line 1213 "y.tab.c"
+    break;
+
+  case 14: /* Terme: tNB  */
+#line 25 "calc.y"
+                      { (yyval.nb) = (yyvsp[0].nb); }
+#line 1219 "y.tab.c"
     break;
 
 
-#line 1164 "y.tab.c"
+#line 1223 "y.tab.c"
 
       default: break;
     }
@@ -1353,13 +1412,11 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 41 "c.y"
-
+#line 26 "calc.y"
 
 void yyerror(char *s) { fprintf(stderr, "%s\n", s); }
-
 int main(void) {
-  printf("C\n"); // yydebug=1;
+  printf("Calculatrice\n"); // yydebug=1;
   yyparse();
   return 0;
 }
