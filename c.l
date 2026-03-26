@@ -24,8 +24,10 @@
 "*" { return tMUL; }
 "/" { return tDIV; }
 "=" { return tEG; }
-"(" {printf("(");}
-")" {printf(")");}
+"(" { return tPO; }
+")" { return tPF; }
+"{" { return tACCO; }
+"}" { return tACCF; }
 " " {printf(" ");}
 ";" { return tFI; }
 

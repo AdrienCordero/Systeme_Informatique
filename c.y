@@ -8,24 +8,35 @@ char* var[100];
 typedef struct {
   char name[64];
   int val;  
-} int_val_t;
-int_val_t table_var[100];
+} var_int_t;
+var_int_t table_var[100];
 int nb_var = 0;
 int val;
 %}
 
 %union { int nb; char var[64]; }
 %union { int nb1; int val; }
-%token tMAIN tVAL tINT tEG tFI tADD tSUB tMUL tDIV
+%token tMAIN tVAL tINT tEG tFI tADD tSUB tMUL tDIV tPO tPF tACCO tACCF
 %token <var> tNAME
 %token <nb> tNB
 %type <nb> Terme Add Sub Mul Div
 %start C
 %%
 
-C: Decl | Decl C;
+C: Function | Function C
+  | Instruction | Instruction C
 
-//Déclaration des valeurs
+Function: tINT tNAME tPO tPF Bloc { printf("function %s\n", $2); }
+  | tINT tNAME tPO tPF { printf("function %s\n", $2); }
+
+Instruction: Decl
+  | Decl Instruction
+  | Bloc;
+
+Bloc: tACCO Instruction tACCF;
+
+
+// Déclaration des valeurs
 Decl : tINT tNAME tFI {
         strcpy(table_var[nb_var].name, $2);
         nb_var++;
@@ -44,6 +55,7 @@ Terme : tNB { $$ = $1; }
       | Sub { $$ = $1; }
       | Mul { $$ = $1; }
       | Div { $$ = $1; }
+      | tPO Terme tPF { $$ = $2; }
 
 Add: Terme tADD Terme { $$ = $1 + $3; }
 Sub : Terme tSUB Terme { $$ = $1 - $3; }
