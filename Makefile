@@ -1,26 +1,5 @@
-GRM=c.y
-LEX=c.l
-BIN=c
+build:
+	lex c.l & yacc -d c.y & gcc variables.c y.tab.c lex.yy.c -o c
 
-CC=gcc
-CFLAGS=-Wall -g
-
-OBJ=y.tab.o lex.yy.o main.o
-
-all: $(BIN)
-
-%.o: %.c
-	$(CC) -c $(CFLAGS) $(CPPFLAGS) $< -o $@
-
-y.tab.c: $(GRM)
-	yacc -d $<
-
-lex.yy.c: $(LEX)
-	flex $<
-
-$(BIN): $(OBJ)
-	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -o $@
-
-clean:
-	rm $(OBJ) y.tab.c y.tab.h lex.yy.c
-
+run:
+	./c
