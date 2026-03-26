@@ -28,10 +28,10 @@
 ")" { return tPF; }
 "{" { return tACCO; }
 "}" { return tACCF; }
-" " {printf(" ");}
+" " {}
 ";" { return tFI; }
 
-[\t] {printf("tab");}
+[\t] {}
 "," {printf(",");}
 [\n] {printf("\n");}
 
