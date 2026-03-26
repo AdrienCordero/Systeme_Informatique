@@ -10,7 +10,7 @@
 %%
 
 "main" { return tMAIN; }
-"const" { printf("tsnoc"); }
+"const" { return tCONST; }
 "int" { return tINT; }
 "print" {printf("tnirp");} // TODO
 [0-9]+	{

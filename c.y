@@ -11,7 +11,7 @@ int val;
 
 %union { int nb; char var[64]; }
 %union { int nb1; int val; }
-%token tMAIN tVAL tINT tEG tFI tADD tSUB tMUL tDIV tPO tPF tACCO tACCF
+%token tMAIN tVAL tINT tCONST tEG tFI tADD tSUB tMUL tDIV tPO tPF tACCO tACCF
 %token <var> tNAME
 %token <nb> tNB
 %type <nb> Terme Add Sub Mul Div
@@ -34,6 +34,8 @@ Bloc: tACCO Instruction tACCF;
 // Déclaration des valeurs
 Variable : tINT tNAME tFI { decl($2); }
       | tINT tNAME tEG Terme tFI { decl_and_assign($2, $4); }
+      | tCONST tINT tNAME tEG Terme tFI { decl_and_assign_const($3, $5); }
+      | tINT tCONST tNAME tEG Terme tFI { decl_and_assign_const($3, $5); }
 
 //  Calcul 
 Terme : tNB { $$ = $1; }
