@@ -21,6 +21,12 @@ void decl_and_assign(char* name, int val, bool is_const) {
     printf("nom : %s, val : %d, const: %d\n", table_var[nb_var-1].name, table_var[nb_var-1].val, table_var[nb_var-1].is_const);
 }
 
+void assign(char* name, int val) {
+    for (int i=0; i < nb_var; i++)
+        if (strcmp(name, table_var[i].name) == 0 && !table_var[i].is_const)
+            table_var[i].val = val;
+}
+
 int get_var(char* name) {
     for (int i=0; i < nb_var; i++)
         if (strcmp(name, table_var[i].name) == 0)

@@ -13,6 +13,8 @@ void decl(char* name);
 
 void decl_and_assign(char* name, int val, bool is_const);
 
+void assign(char* name, int val);
+
 int get_var(char* name);
 
 #endif

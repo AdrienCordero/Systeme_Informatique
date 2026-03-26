@@ -26,7 +26,8 @@ Function: tINT tNAME tPO tPF Bloc { printf("function %s\n", $2); }
 Instruction:
     Variable
   | Variable Instruction
-  | Bloc;
+  | Bloc
+  | Bloc Instruction;
 
 Bloc: tACCO Instruction tACCF;
 
@@ -35,6 +36,7 @@ Variable : tINT tNAME tFI { decl($2); }
       | tINT tNAME tEG Terme tFI { decl_and_assign($2, $4, false); }
       | tCONST tINT tNAME tEG Terme tFI { decl_and_assign($3, $5, true); }
       | tINT tCONST tNAME tEG Terme tFI { decl_and_assign($3, $5, true); }
+      | tNAME tEG Terme tFI { assign($1, $3); }
 
 //  Calcul 
 Terme : tNB { $$ = $1; }
