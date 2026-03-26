@@ -1,15 +1,18 @@
 #ifndef VARIABLES_H
 #define VARIABLES_H
 
+#include <stdbool.h>
+
 typedef struct {
   char name[64];
-  int val;  
+  int val;
+  bool is_const;
 } var_int_t;
 
 void decl(char* name);
 
-void decl_and_assign(char* name, int val);
+void decl_and_assign(char* name, int val, bool is_const);
 
-void decl_and_assign_const(char* name, const int val);
+int get_var(char* name);
 
 #endif
