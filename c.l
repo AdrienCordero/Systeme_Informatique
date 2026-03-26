@@ -19,15 +19,15 @@
 [a-z]+ {  strcpy(yylval.var, yytext); 
         return tNAME; }
 
-"+" {printf("+");}
-"-" {printf("-");}
-"*" {printf("*");}
-"/" {printf("/");}
-"=" { return tEG;}
+"+" { return tADD; }
+"-" { return tSUB; }
+"*" { return tMUL; }
+"/" { return tDIV; }
+"=" { return tEG; }
 "(" {printf("(");}
 ")" {printf(")");}
 " " {printf(" ");}
-";" { return tFI;}
+";" { return tFI; }
 
 [\t] {printf("tab");}
 "," {printf(",");}
