@@ -7,6 +7,12 @@ var_int_t table_var[100];
 int nb_var = 0;
 
 void decl(char* name) {
+    for (int i=0; i < nb_var; i++) {
+        if (strcmp(name, table_var[i].name) == 0) {
+            printf("La variable existe déjà\n");
+            return;
+        }
+    }
     strcpy(table_var[nb_var].name, name);
     table_var[nb_var].is_const = false;
     nb_var++;
@@ -14,6 +20,12 @@ void decl(char* name) {
 }
 
 void decl_and_assign(char* name, int val, bool is_const) {
+    for (int i=0; i < nb_var; i++) {
+        if (strcmp(name, table_var[i].name) == 0) {
+            printf("La variable existe déjà\n");
+            return;
+        }
+    }
     strcpy(table_var[nb_var].name, name);
     table_var[nb_var].val = val;
     table_var[nb_var].is_const = is_const;

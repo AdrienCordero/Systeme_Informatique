@@ -25,9 +25,7 @@ Function: tINT tNAME tPO tPF Bloc { printf("function %s\n", $2); }
 
 Instruction:
     Variable
-  | Variable Instruction
-  | Bloc
-  | Bloc Instruction;
+  | Bloc;
 
 Bloc: tACCO Instruction tACCF;
 
