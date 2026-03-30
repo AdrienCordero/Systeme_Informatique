@@ -10,23 +10,28 @@ int val;
 %}
 
 %union { int nb; char var[64]; }
-%token tMAIN tVAL tINT tCONST tEG tFI tADD tSUB tMUL tDIV tPO tPF tACCO tACCF
+%token tMAIN tPRINT tVAL tINT tCONST tEG tFI tADD tSUB tMUL tDIV tPO tPF tACCO tACCF
 %token <var> tNAME
 %token <nb> tNB
 %left tADD tSUB
 %left tMUL tDIV
 %type <nb> Terme Add Sub Mul Div
-%start C
+%start Main
 %%
 
-C: Function | Function C
-  | Instruction | Instruction C
+Main: tMAIN tPO tPF Bloc
 
-Function: tINT tNAME tPO tPF Bloc { printf("function %s\n", $2); }
-  | tINT tNAME tPO tPF tFI { printf("function %s\n", $2); }
+Print : tPRINT tPO Terme tPF tFI { printf("%d\n", $3); }
+
+C:
+    Instruction
+  | Instruction C
+  | Print
+  | Print C
 
 Instruction:
     Variable
+  | Variable C
   | Bloc;
 
 Bloc: tACCO Instruction tACCF;

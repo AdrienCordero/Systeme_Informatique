@@ -55,21 +55,22 @@ extern int yydebug;
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
     tMAIN = 258,                   /* tMAIN  */
-    tVAL = 259,                    /* tVAL  */
-    tINT = 260,                    /* tINT  */
-    tCONST = 261,                  /* tCONST  */
-    tEG = 262,                     /* tEG  */
-    tFI = 263,                     /* tFI  */
-    tADD = 264,                    /* tADD  */
-    tSUB = 265,                    /* tSUB  */
-    tMUL = 266,                    /* tMUL  */
-    tDIV = 267,                    /* tDIV  */
-    tPO = 268,                     /* tPO  */
-    tPF = 269,                     /* tPF  */
-    tACCO = 270,                   /* tACCO  */
-    tACCF = 271,                   /* tACCF  */
-    tNAME = 272,                   /* tNAME  */
-    tNB = 273                      /* tNB  */
+    tPRINT = 259,                  /* tPRINT  */
+    tVAL = 260,                    /* tVAL  */
+    tINT = 261,                    /* tINT  */
+    tCONST = 262,                  /* tCONST  */
+    tEG = 263,                     /* tEG  */
+    tFI = 264,                     /* tFI  */
+    tADD = 265,                    /* tADD  */
+    tSUB = 266,                    /* tSUB  */
+    tMUL = 267,                    /* tMUL  */
+    tDIV = 268,                    /* tDIV  */
+    tPO = 269,                     /* tPO  */
+    tPF = 270,                     /* tPF  */
+    tACCO = 271,                   /* tACCO  */
+    tACCF = 272,                   /* tACCF  */
+    tNAME = 273,                   /* tNAME  */
+    tNB = 274                      /* tNB  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -79,21 +80,22 @@ extern int yydebug;
 #define YYerror 256
 #define YYUNDEF 257
 #define tMAIN 258
-#define tVAL 259
-#define tINT 260
-#define tCONST 261
-#define tEG 262
-#define tFI 263
-#define tADD 264
-#define tSUB 265
-#define tMUL 266
-#define tDIV 267
-#define tPO 268
-#define tPF 269
-#define tACCO 270
-#define tACCF 271
-#define tNAME 272
-#define tNB 273
+#define tPRINT 259
+#define tVAL 260
+#define tINT 261
+#define tCONST 262
+#define tEG 263
+#define tFI 264
+#define tADD 265
+#define tSUB 266
+#define tMUL 267
+#define tDIV 268
+#define tPO 269
+#define tPF 270
+#define tACCO 271
+#define tACCF 272
+#define tNAME 273
+#define tNB 274
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -102,7 +104,7 @@ union YYSTYPE
 #line 12 "c.y"
  int nb; char var[64]; 
 
-#line 106 "y.tab.h"
+#line 108 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

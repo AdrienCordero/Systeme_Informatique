@@ -16,7 +16,6 @@ void decl(char* name) {
     strcpy(table_var[nb_var].name, name);
     table_var[nb_var].is_const = false;
     nb_var++;
-    printf("nom : %s\n", table_var[nb_var-1].name);
 }
 
 void decl_and_assign(char* name, int val, bool is_const) {
@@ -30,7 +29,6 @@ void decl_and_assign(char* name, int val, bool is_const) {
     table_var[nb_var].val = val;
     table_var[nb_var].is_const = is_const;
     nb_var++;
-    printf("nom : %s, val : %d, const: %d\n", table_var[nb_var-1].name, table_var[nb_var-1].val, table_var[nb_var-1].is_const);
 }
 
 void assign(char* name, int val) {

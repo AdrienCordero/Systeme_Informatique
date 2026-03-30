@@ -12,7 +12,7 @@
 "main" { return tMAIN; }
 "const " { return tCONST; }
 "int " { return tINT; }
-"print" {printf("tnirp");}
+"printf" { return tPRINT; }
 [0-9]+	{
 	  yylval.nb = atoi(yytext);
 	  return tNB;}
@@ -32,8 +32,8 @@
 ";" { return tFI; }
 
 [\t] {}
-"," {printf(",");}
-[\n] {printf("\n");}
+"," {}
+[\n] {}
 
 
 %%
