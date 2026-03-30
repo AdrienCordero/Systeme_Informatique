@@ -13,6 +13,8 @@ int val;
 %token tMAIN tVAL tINT tCONST tEG tFI tADD tSUB tMUL tDIV tPO tPF tACCO tACCF
 %token <var> tNAME
 %token <nb> tNB
+%left tADD tSUB
+%left tMUL tDIV
 %type <nb> Terme Add Sub Mul Div
 %start C
 %%
@@ -36,12 +38,12 @@ Variable : tINT tNAME tFI { decl($2); }
       | tINT tCONST tNAME tEG Terme tFI { decl_and_assign($3, $5, true); }
       | tNAME tEG Terme tFI { assign($1, $3); }
 
-//  Calcul 
+//  Calcul
 Terme : tNB { $$ = $1; }
-      | Add { $$ = $1; }
-      | Sub { $$ = $1; }
       | Mul { $$ = $1; }
       | Div { $$ = $1; }
+      | Add { $$ = $1; }
+      | Sub { $$ = $1; }
       | tPO Terme tPF { $$ = $2; }
       | tNAME { $$ = get_var($1); }
 
