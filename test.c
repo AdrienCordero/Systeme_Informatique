@@ -1,11 +1,8 @@
-main()
-{
-    int i = 3;
-    int j;
-    j=4 ;
-    int k;
-    k=8 ;
-    printf (i) ;
-    int r=(i+j)*(i+k/j) ;
-    printf ( r ) ;
+main() {
+    int a;
+    int b;
+    a = 1;
+    b = 2;
+    const int c = 3;
+    int d = 1 + 2;
 }

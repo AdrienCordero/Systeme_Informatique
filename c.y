@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "variables.h"
+#include "asm.h"
 
 void yyerror(char *s);
 
@@ -19,7 +20,7 @@ int val;
 %start Main
 %%
 
-Main: tMAIN tPO tPF Bloc
+Main: { create_file(); } tMAIN tPO tPF Bloc { close_file(); }
 
 Print : tPRINT tPO Terme tPF tFI { printf("%d\n", $3); }
 
@@ -32,15 +33,15 @@ C:
 Instruction:
     Variable
   | Variable C
-  | Bloc;
+  | Bloc
 
-Bloc: tACCO Instruction tACCF;
+Bloc: tACCO Instruction tACCF
 
 // Déclaration des valeurs
 Variable : tINT tNAME tFI { decl($2); }
-      | tINT tNAME tEG Terme tFI { decl_and_assign($2, $4, false); }
-      | tCONST tINT tNAME tEG Terme tFI { decl_and_assign($3, $5, true); }
-      | tINT tCONST tNAME tEG Terme tFI { decl_and_assign($3, $5, true); }
+      | tINT tNAME tEG Terme tFI { decl($2); assign($2, $4); }
+      | tCONST tINT tNAME tEG Terme tFI { decl_assign_const($3, $5); }
+      | tINT tCONST tNAME tEG Terme tFI { decl_assign_const($3, $5); }
       | tNAME tEG Terme tFI { assign($1, $3); }
 
 //  Calcul
@@ -52,7 +53,8 @@ Terme : tNB { $$ = $1; }
       | tPO Terme tPF { $$ = $2; }
       | tNAME { $$ = get_var($1); }
 
-Add: Terme tADD Terme { $$ = $1 + $3; }
+//Add: Terme tADD Terme { $$ = $1 + $3; }
+Add : Terme tADD Terme { add_var($1, $3); }
 Sub : Terme tSUB Terme { $$ = $1 - $3; }
 Mul : Terme tMUL Terme { $$ = $1 * $3; }
 Div : Terme tDIV Terme { $$ = $1 / $3; }

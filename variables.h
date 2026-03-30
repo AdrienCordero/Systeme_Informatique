@@ -3,18 +3,14 @@
 
 #include <stdbool.h>
 
-typedef struct {
-  char name[64];
-  int val;
-  bool is_const;
-} var_int_t;
-
 void decl(char* name);
-
-void decl_and_assign(char* name, int val, bool is_const);
 
 void assign(char* name, int val);
 
+void decl_assign_const(char* name, int val);
+
 int get_var(char* name);
+
+void add_var(int a, int b);
 
 #endif

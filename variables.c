@@ -1,40 +1,50 @@
 #include "variables.h"
+#include "asm.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
-var_int_t table_var[100];
+int max_var = 0;
+var_int_t *table_var;
 int nb_var = 0;
 
 void decl(char* name) {
+    if (max_var == 0) {
+        table_var = malloc(100 * sizeof(int));
+        max_var = 100;
+    }
     for (int i=0; i < nb_var; i++) {
         if (strcmp(name, table_var[i].name) == 0) {
             printf("La variable existe déjà\n");
             return;
         }
     }
+    if (nb_var == max_var) {
+        max_var *= 2;
+        table_var = realloc(table_var, max_var * sizeof(int));
+    }
     strcpy(table_var[nb_var].name, name);
+    table_var[nb_var].addr = nb_var;
     table_var[nb_var].is_const = false;
     nb_var++;
 }
 
-void decl_and_assign(char* name, int val, bool is_const) {
+void assign(char* name, int val) {
     for (int i=0; i < nb_var; i++) {
         if (strcmp(name, table_var[i].name) == 0) {
-            printf("La variable existe déjà\n");
-            return;
+            if (table_var[i].is_const) {
+                printf("impossible d'assigner une valeur à une variable constante\n");
+                return;
+            }
+            afc(table_var[i].addr, val);
         }
     }
-    strcpy(table_var[nb_var].name, name);
-    table_var[nb_var].val = val;
-    table_var[nb_var].is_const = is_const;
-    nb_var++;
 }
 
-void assign(char* name, int val) {
-    for (int i=0; i < nb_var; i++)
-        if (strcmp(name, table_var[i].name) == 0 && !table_var[i].is_const)
-            table_var[i].val = val;
+void decl_assign_const(char* name, int val) {
+    decl(name);
+    table_var[nb_var - 1].is_const = true;
+    afc(table_var[nb_var - 1].addr, val);
 }
 
 int get_var(char* name) {
@@ -43,4 +53,32 @@ int get_var(char* name) {
             return table_var[i].val;
     printf("Aucune variable ne possède ce nom");
     return 0;
+}
+
+void add_var(int a, int b) {
+    var_int_t var_a= {
+        "",
+        nb_var,
+        a,
+        false
+    };
+    afc(var_a.addr, a);
+    nb_var++;
+    var_int_t var_b = {
+        "",
+        nb_var,
+        b,
+        false
+    };
+    afc(var_b.addr, b);
+    nb_var++;
+    var_int_t var_res = {
+        "",
+        nb_var,
+        0,
+        false
+    };
+    table_var[nb_var] = var_res;
+    nb_var++;
+    add(var_res.addr, var_a.addr, var_b.addr);
 }
