@@ -1,12 +1,5 @@
 #include <stdbool.h>
 
-typedef struct {
-  char name[64];
-  int addr;
-  int val;
-  bool is_const;
-} var_int_t;
-
 void asm_create_file();
 
 void asm_close_file();

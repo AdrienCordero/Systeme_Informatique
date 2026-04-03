@@ -40,7 +40,7 @@ void assign(char* name, int addr) {
                 printf("impossible d'assigner une valeur à une variable constante\n");
                 return;
             }
-            //afc(table_var[i].addr, val);
+            table_var[i].addr = addr;
         }
     }
 }
@@ -54,7 +54,7 @@ void decl_assign_const(char* name, int val) {
 int get_var(char* name) {
     for (int i=0; i < nb_var; i++)
         if (strcmp(name, table_var[i].name) == 0)
-            return table_var[i].val;
+            return table_var[i].addr;
     printf("Aucune variable ne possède ce nom");
     return 0;
 }
