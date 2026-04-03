@@ -4,18 +4,30 @@
 
 FILE *file = NULL;
 
-void create_file() {
+void asm_create_file() {
     file = fopen("asm.ea", "w");
 }
 
-void close_file() {
+void asm_close_file() {
     fclose(file);
 }
 
-void afc(int address, int val) {
+void asm_afc(int address, int val) {
     fprintf(file, "AFC %d %d\n", address, val);
 }
 
-void add(int addr, int a, int b) {
+void asm_add(int addr, int a, int b) {
     fprintf(file, "ADD %d %d %d\n", addr, a, b);
+}
+
+void asm_sub(int addr, int a, int b) {
+    fprintf(file, "SUB %d %d %d\n", addr, a, b);
+}
+
+void asm_mul(int addr, int a, int b) {
+    fprintf(file, "MUL %d %d %d\n", addr, a, b);
+}
+
+void asm_div(int addr, int a, int b) {
+    fprintf(file, "DIV %d %d %d\n", addr, a, b);
 }

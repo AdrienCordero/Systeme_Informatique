@@ -16,11 +16,11 @@ int val;
 %token <nb> tNB
 %left tADD tSUB
 %left tMUL tDIV
-%type <nb> Terme Sub Mul Div
+%type <nb> Terme
 %start Main
 %%
 
-Main: { create_file(); } tMAIN tPO tPF Bloc { close_file(); }
+Main: { asm_create_file(); } tMAIN tPO tPF Bloc { asm_close_file(); }
 
 Print : tPRINT tPO Terme tPF tFI { printf("%d\n", $3); }
 
@@ -47,17 +47,14 @@ Variable:
   | tNAME tEG Terme tFI { assign($1, $3); }
 
 //  Calcul
-Terme : tNB { $$ = create_tmp($1); }
-      | Mul { $$ = $1; }
-      | Div { $$ = $1; }
-      | Terme tADD Terme { $$ = add_var($1, $3); }
-      | Sub { $$ = $1; }
-      | tPO Terme tPF { $$ = $2; }
-      | tNAME { $$ = get_var($1); }
-
-Sub : Terme tSUB Terme { $$ = $1 - $3; }
-Mul : Terme tMUL Terme { $$ = $1 * $3; }
-Div : Terme tDIV Terme { $$ = $1 / $3; }
+Terme : 
+    tNB { $$ = create_tmp($1); }
+  | Terme tADD Terme { $$ = op_var(OP_ADD, $1, $3); }
+  | Terme tSUB Terme { $$ = op_var(OP_SUB, $1, $3); }
+  | Terme tMUL Terme { $$ = op_var(OP_MUL, $1, $3); }
+  | Terme tDIV Terme { $$ = op_var(OP_DIV, $1, $3); }
+  | tPO Terme tPF { $$ = $2; }
+  | tNAME { $$ = get_var($1); }
 
 %%
 

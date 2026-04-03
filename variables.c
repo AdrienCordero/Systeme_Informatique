@@ -48,7 +48,7 @@ void assign(char* name, int addr) {
 void decl_assign_const(char* name, int val) {
     decl(name);
     table_var[nb_var - 1].is_const = true;
-    afc(table_var[nb_var - 1].addr, val);
+    asm_afc(table_var[nb_var - 1].addr, val);
 }
 
 int get_var(char* name) {
@@ -61,12 +61,25 @@ int get_var(char* name) {
 
 int create_tmp(int val) {
     int addr = decl("");
-    afc(addr, val);
+    asm_afc(addr, val);
     return addr;
 }
 
-int add_var(int a, int b) {
+int op_var(OPERATION op, int a, int b) {
     int addr_res = decl("");
-    add(addr_res, a, b);
+    switch (op) {
+    case OP_ADD:
+        asm_add(addr_res, a, b);
+        break;
+    case OP_SUB:
+        asm_sub(addr_res, a, b);
+        break;
+    case OP_MUL:
+        asm_mul(addr_res, a, b);
+        break;
+    case OP_DIV:
+        asm_div(addr_res, a, b);
+        break;
+    }
     return addr_res;
 }
