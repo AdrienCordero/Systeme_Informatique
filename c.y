@@ -20,7 +20,7 @@ int val;
 %start Main
 %%
 
-Main: { asm_create_file(); } tMAIN tPO tPF Bloc { asm_close_file(); }
+Main: { asm_create_file(); } tMAIN tPO tPF Bloc { print_var_addr(); asm_close_file(); }
 
 Print : tPRINT tPO Terme tPF tFI { printf("%d\n", $3); }
 
@@ -41,10 +41,14 @@ Bloc:
 
 // Déclaration des valeurs
 Variable:
-    tINT tNAME tFI { decl($2); }
+    tINT Name_var tFI
   | tINT tNAME tEG Terme tFI { decl($2); assign($2, $4); }
   | tCONST tINT tNAME tEG Terme tFI { decl_assign_const($3, $5); }
   | tNAME tEG Terme tFI { assign($1, $3); }
+
+Name_var:
+    tNAME { decl($1); }
+  | tNAME { decl($1); } Name_var
 
 //  Calcul
 Terme : 

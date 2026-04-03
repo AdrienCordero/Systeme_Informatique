@@ -6,11 +6,12 @@
 typedef struct {
   char name[64];
   int addr;
-  int val;
   bool is_const;
 } var_int_t;
 
 typedef enum { OP_ADD, OP_SUB, OP_MUL, OP_DIV } OPERATION;
+
+void print_var_addr();
 
 int decl(char* name);
 

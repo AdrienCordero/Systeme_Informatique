@@ -16,6 +16,10 @@ void asm_afc(int address, int val) {
     fprintf(file, "AFC %d %d\n", address, val);
 }
 
+void asm_cop(int addr, int a) {
+    fprintf(file, "COP %d %d\n", addr, a);
+}
+
 void asm_add(int addr, int a, int b) {
     fprintf(file, "ADD %d %d %d\n", addr, a, b);
 }

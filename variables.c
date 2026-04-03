@@ -8,6 +8,12 @@ int max_var = 0;
 var_int_t *table_var;
 int nb_var = 0;
 
+void print_var_addr() {
+    for (int i=0; i < nb_var; i++)
+        if (strcmp(table_var[i].name, "") != 0)
+            printf("%s : %d\n", table_var[i].name, table_var[i].addr);
+}
+
 int decl(char* name) {
     if (max_var == 0) {
         table_var = malloc(100 * sizeof(var_int_t));
@@ -29,7 +35,6 @@ int decl(char* name) {
     table_var[nb_var].addr = nb_var;
     table_var[nb_var].is_const = false;
     nb_var++;
-    printf("%d\n", table_var[nb_var-1].addr);
     return table_var[nb_var-1].addr;
 }
 
@@ -40,7 +45,9 @@ void assign(char* name, int addr) {
                 printf("impossible d'assigner une valeur à une variable constante\n");
                 return;
             }
-            table_var[i].addr = addr;
+            int new_addr = decl("");
+            table_var[i].addr = new_addr;
+            asm_cop(new_addr, addr);
         }
     }
 }
