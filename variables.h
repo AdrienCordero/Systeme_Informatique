@@ -3,7 +3,7 @@
 
 #include <stdbool.h>
 
-void decl(char* name);
+int decl(char* name);
 
 void assign(char* name, int val);
 

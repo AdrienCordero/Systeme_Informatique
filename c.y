@@ -31,18 +31,23 @@ C:
   | Print C
 
 Instruction:
-    Variable
-  | Variable C
+    Variable_val
+  | Variable_val C
+  | Variable_op
+  | Variable_op C
   | Bloc
 
-Bloc: tACCO Instruction tACCF
+Bloc:
+    tACCO Instruction tACCF
+  | tACCO tACCF
 
 // Déclaration des valeurs
-Variable : tINT tNAME tFI { decl($2); }
-      | tINT tNAME tEG Terme tFI { decl($2); assign($2, $4); }
-      | tCONST tINT tNAME tEG Terme tFI { decl_assign_const($3, $5); }
-      | tINT tCONST tNAME tEG Terme tFI { decl_assign_const($3, $5); }
-      | tNAME tEG Terme tFI { assign($1, $3); }
+Variable_val :
+    tINT tNAME tFI { decl($2); }
+  | tINT tNAME tEG tNB tFI { decl($2); assign($2, $4); }
+  | tCONST tINT tNAME tEG tNB tFI { decl_assign_const($3, $5); }
+
+Variable_op : tNAME tEG Terme tFI { assign($1, $3); }
 
 //  Calcul
 Terme : tNB { $$ = $1; }

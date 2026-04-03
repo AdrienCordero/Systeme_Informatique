@@ -5,18 +5,23 @@
 #include <string.h>
 
 int max_var = 0;
+int max_tmp = 0;
 var_int_t *table_var;
+tmp_int_t *table_tmp;
 int nb_var = 0;
+int nb_tmp = 0;
 
-void decl(char* name) {
+int decl(char* name) {
     if (max_var == 0) {
-        table_var = malloc(100 * sizeof(int));
+        table_var = malloc(100 * sizeof(var_int_t));
         max_var = 100;
     }
-    for (int i=0; i < nb_var; i++) {
-        if (strcmp(name, table_var[i].name) == 0) {
-            printf("La variable existe déjà\n");
-            return;
+    if (strcmp("", name) != 0) {
+        for (int i=0; i < nb_var; i++) {
+            if (strcmp(name, table_var[i].name) == 0) {
+                printf("La variable existe déjà\n");
+                return -1;
+            }
         }
     }
     if (nb_var == max_var) {
@@ -27,6 +32,8 @@ void decl(char* name) {
     table_var[nb_var].addr = nb_var;
     table_var[nb_var].is_const = false;
     nb_var++;
+    printf("%d\n", table_var[nb_var-1].addr);
+    return table_var[nb_var-1].addr;
 }
 
 void assign(char* name, int val) {
@@ -55,30 +62,31 @@ int get_var(char* name) {
     return 0;
 }
 
+int decl_tmp(int val) {
+    if (max_tmp == 0) {
+        table_tmp = malloc(100 * sizeof(tmp_int_t));
+        max_tmp = 100;
+    }
+    if (nb_tmp == max_tmp) {
+        max_tmp *= 2;
+        table_tmp = realloc(table_tmp, max_tmp * sizeof(int));
+    }
+    table_tmp[nb_tmp].addr = nb_tmp;
+    table_tmp[nb_tmp].val = val;
+    nb_tmp++;
+    printf("%d\n", table_tmp[nb_tmp-1].addr);
+    return table_tmp[nb_tmp-1].addr;
+}
+
+int create_tmp(int val) {
+    int addr = decl("");
+    afc(addr, val);
+    return addr;
+}
+
 void add_var(int a, int b) {
-    var_int_t var_a= {
-        "",
-        nb_var,
-        a,
-        false
-    };
-    afc(var_a.addr, a);
-    nb_var++;
-    var_int_t var_b = {
-        "",
-        nb_var,
-        b,
-        false
-    };
-    afc(var_b.addr, b);
-    nb_var++;
-    var_int_t var_res = {
-        "",
-        nb_var,
-        0,
-        false
-    };
-    table_var[nb_var] = var_res;
-    nb_var++;
-    add(var_res.addr, var_a.addr, var_b.addr);
+    int addr_a = create_tmp(a);
+    int addr_b = create_tmp(b);
+    int addr_res = create_tmp(0);
+    add(addr_res, addr_a, addr_b);
 }
