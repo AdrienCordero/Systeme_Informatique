@@ -16,7 +16,7 @@ int val;
 %token <nb> tNB
 %left tADD tSUB
 %left tMUL tDIV
-%type <nb> Terme Add Sub Mul Div
+%type <nb> Terme Sub Mul Div
 %start Main
 %%
 
@@ -31,10 +31,8 @@ C:
   | Print C
 
 Instruction:
-    Variable_val
-  | Variable_val C
-  | Variable_op
-  | Variable_op C
+    Variable
+  | Variable C
   | Bloc
 
 Bloc:
@@ -42,24 +40,21 @@ Bloc:
   | tACCO tACCF
 
 // Déclaration des valeurs
-Variable_val :
+Variable:
     tINT tNAME tFI { decl($2); }
-  | tINT tNAME tEG tNB tFI { decl($2); assign($2, $4); }
-  | tCONST tINT tNAME tEG tNB tFI { decl_assign_const($3, $5); }
-
-Variable_op : tNAME tEG Terme tFI { assign($1, $3); }
+  | tINT tNAME tEG Terme tFI { decl($2); assign($2, $4); }
+  | tCONST tINT tNAME tEG Terme tFI { decl_assign_const($3, $5); }
+  | tNAME tEG Terme tFI { assign($1, $3); }
 
 //  Calcul
-Terme : tNB { $$ = $1; }
+Terme : tNB { $$ = create_tmp($1); }
       | Mul { $$ = $1; }
       | Div { $$ = $1; }
-      | Add { $$ = $1; }
+      | Terme tADD Terme { $$ = add_var($1, $3); }
       | Sub { $$ = $1; }
       | tPO Terme tPF { $$ = $2; }
       | tNAME { $$ = get_var($1); }
 
-//Add: Terme tADD Terme { $$ = $1 + $3; }
-Add : Terme tADD Terme { add_var($1, $3); }
 Sub : Terme tSUB Terme { $$ = $1 - $3; }
 Mul : Terme tMUL Terme { $$ = $1 * $3; }
 Div : Terme tDIV Terme { $$ = $1 / $3; }

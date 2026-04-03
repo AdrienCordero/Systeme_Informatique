@@ -5,12 +5,14 @@
 
 int decl(char* name);
 
-void assign(char* name, int val);
+void assign(char* name, int addr);
 
 void decl_assign_const(char* name, int val);
 
 int get_var(char* name);
 
-void add_var(int a, int b);
+int create_tmp(int val);
+
+int add_var(int a, int b);
 
 #endif

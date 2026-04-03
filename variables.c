@@ -5,11 +5,8 @@
 #include <string.h>
 
 int max_var = 0;
-int max_tmp = 0;
 var_int_t *table_var;
-tmp_int_t *table_tmp;
 int nb_var = 0;
-int nb_tmp = 0;
 
 int decl(char* name) {
     if (max_var == 0) {
@@ -36,14 +33,14 @@ int decl(char* name) {
     return table_var[nb_var-1].addr;
 }
 
-void assign(char* name, int val) {
+void assign(char* name, int addr) {
     for (int i=0; i < nb_var; i++) {
         if (strcmp(name, table_var[i].name) == 0) {
             if (table_var[i].is_const) {
                 printf("impossible d'assigner une valeur à une variable constante\n");
                 return;
             }
-            afc(table_var[i].addr, val);
+            //afc(table_var[i].addr, val);
         }
     }
 }
@@ -62,31 +59,14 @@ int get_var(char* name) {
     return 0;
 }
 
-int decl_tmp(int val) {
-    if (max_tmp == 0) {
-        table_tmp = malloc(100 * sizeof(tmp_int_t));
-        max_tmp = 100;
-    }
-    if (nb_tmp == max_tmp) {
-        max_tmp *= 2;
-        table_tmp = realloc(table_tmp, max_tmp * sizeof(int));
-    }
-    table_tmp[nb_tmp].addr = nb_tmp;
-    table_tmp[nb_tmp].val = val;
-    nb_tmp++;
-    printf("%d\n", table_tmp[nb_tmp-1].addr);
-    return table_tmp[nb_tmp-1].addr;
-}
-
 int create_tmp(int val) {
     int addr = decl("");
     afc(addr, val);
     return addr;
 }
 
-void add_var(int a, int b) {
-    int addr_a = create_tmp(a);
-    int addr_b = create_tmp(b);
-    int addr_res = create_tmp(0);
-    add(addr_res, addr_a, addr_b);
+int add_var(int a, int b) {
+    int addr_res = decl("");
+    add(addr_res, a, b);
+    return addr_res;
 }
