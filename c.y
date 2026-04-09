@@ -4,6 +4,7 @@
 #include "variables.h"
 #include "asm.h"
 
+extern FILE *yyin;
 void yyerror(char *s);
 
 char* var[100];
@@ -20,7 +21,15 @@ int val;
 %start Main
 %%
 
-Main: { asm_create_file(); } tMAIN tPO tPF Bloc { print_var_addr(); asm_close_file(); }
+Main: { 
+  yyin = fopen("test.c", "r");
+  if(!yyin) {
+      printf("Impossible d'ouvrir test.c\n");
+      exit(1);
+  }
+  asm_create_file();
+  asm_create_file(); } tMAIN tPO tPF Bloc { print_var_addr(); asm_close_file(); 
+}
 
 Print : tPRINT tPO Terme tPF tFI { printf("%d\n", $3); }
 
