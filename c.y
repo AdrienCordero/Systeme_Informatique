@@ -12,12 +12,12 @@ int val;
 %}
 
 %union { int nb; char var[64]; }
-%token tMAIN tPRINT tVAL tINT tCONST tEG tFI tADD tSUB tMUL tDIV tPO tPF tACCO tACCF
+%token tMAIN tPRINT tVAL tINT tCONST tEG tFI tADD tSUB tMUL tDIV tPO tPF tACCO tACCF tIF tWHILE tEQUAL tNOTEQUAL
 %token <var> tNAME
 %token <nb> tNB
 %left tADD tSUB
 %left tMUL tDIV
-%type <nb> Terme
+%type <nb> Terme Condition
 %start Main
 %%
 
@@ -43,6 +43,24 @@ Instruction:
     Variable
   | Variable C
   | Bloc
+  | IfStatement
+  | WhileStatement
+
+WhileStatement:
+    tWHILE tPO Terme tNOTEQUAL Terme tPF { begin_while($3, $5); }
+    Bloc { end_while(); }
+
+IfStatement:
+    tIF tPO Condition tPF Bloc {
+        asm_label(get_label() - 1);
+    }
+
+Condition:
+    Terme tNOTEQUAL Terme {
+        int label = get_label();
+        asm_jne($1, $3, label);
+        $$ = label;
+    }
 
 Bloc:
     tACCO Instruction tACCF

@@ -15,3 +15,9 @@ void asm_sub(int addr, int a, int b);
 void asm_mul(int addr, int a, int b);
 
 void asm_div(int addr, int a, int b);
+
+void asm_jne(int addr, int val, int label);
+
+void asm_jump(int label);
+
+void asm_label(int label);

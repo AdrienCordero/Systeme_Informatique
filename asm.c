@@ -35,3 +35,15 @@ void asm_mul(int addr, int a, int b) {
 void asm_div(int addr, int a, int b) {
     fprintf(file, "DIV %d %d %d\n", addr, a, b);
 }
+
+void asm_jne(int addr, int val, int label) {
+    fprintf(file, "JNE %d %d %d\n", addr, val, label);
+}
+
+void asm_jump(int label) {
+    fprintf(file, "JUMP %d\n", label);
+}
+
+void asm_label(int label) {
+    fprintf(file, "LABEL %d\n", label);
+}

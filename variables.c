@@ -7,6 +7,9 @@
 int max_var = 0;
 var_int_t *table_var;
 int nb_var = 0;
+int label_count = 0;
+int while_start = 0;
+int while_end = 0;
 
 void print_var_addr() {
     for (int i=0; i < nb_var; i++)
@@ -89,4 +92,30 @@ int op_var(OPERATION op, int a, int b) {
         break;
     }
     return addr_res;
+}
+
+int get_label() {
+    return label_count++;
+}
+
+void begin_while(int a, int b) {
+    while_start = get_label();
+    int body = get_label();
+    while_end = get_label();
+
+    asm_label(while_start);
+    asm_jne(a, b, body);
+    asm_jump(while_end);
+    asm_label(body);
+}
+
+void end_while(void) {
+    asm_jump(while_start);
+    asm_label(while_end);
+}
+
+int compare_ne(int a, int b) {
+    int result = decl("");
+    asm_jne(a, b, -1);
+    return result;
 }

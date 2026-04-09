@@ -25,4 +25,12 @@ int create_tmp(int val);
 
 int op_var(OPERATION op, int a, int b);
 
+int get_label();
+
+int compare_ne(int a, int b);
+
+void begin_while(int a, int b);
+
+void end_while(void);
+
 #endif

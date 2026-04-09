@@ -54,8 +54,11 @@
      tPF = 270,
      tACCO = 271,
      tACCF = 272,
-     tNAME = 273,
-     tNB = 274
+     tIF = 273,
+     tEQUAL = 274,
+     tNOTEQUAL = 275,
+     tNAME = 276,
+     tNB = 277
    };
 #endif
 /* Tokens.  */
@@ -74,8 +77,11 @@
 #define tPF 270
 #define tACCO 271
 #define tACCF 272
-#define tNAME 273
-#define tNB 274
+#define tIF 273
+#define tEQUAL 274
+#define tNOTEQUAL 275
+#define tNAME 276
+#define tNB 277
 
 
 
@@ -90,7 +96,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 94 "y.tab.h"
+#line 100 "y.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

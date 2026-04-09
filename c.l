@@ -13,6 +13,10 @@
 "const " { return tCONST; }
 "int " { return tINT; }
 "printf" { return tPRINT; }
+"while" { return tWHILE; }
+"if" { return tIF; }
+"==" { return tEQUAL; }
+"!=" { return tNOTEQUAL; }
 [0-9]+	{
 	  yylval.nb = atoi(yytext);
 	  return tNB;}
