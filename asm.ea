@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 AFC 2 1
 COP 3 2
 AFC 4 0
@@ -7,3 +8,9 @@ COP 6 5
 LABEL 0
 AFC 7 3
 COP 8 7
+=======
+AFC 0 1
+COP 2 0
+COP 4 2
+COP 6 2
+>>>>>>> bc87622eb8e54f935da3b8661c82b0340c5e9863

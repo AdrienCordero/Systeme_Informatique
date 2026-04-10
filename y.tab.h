@@ -95,8 +95,10 @@ extern int yydebug;
     tPF = 270,                     /* tPF  */
     tACCO = 271,                   /* tACCO  */
     tACCF = 272,                   /* tACCF  */
-    tNAME = 273,                   /* tNAME  */
-    tNB = 274                      /* tNB  */
+    tVIRG = 273,                   /* tVIRG  */
+    tAND = 274,                    /* tAND  */
+    tNAME = 275,                   /* tNAME  */
+    tNB = 276                      /* tNB  */
   };
   typedef enum yytokentype yytoken_kind_t;
 >>>>>>> ab794ce06c537cd53027dd6da31f6af477ee20f7
@@ -121,11 +123,18 @@ extern int yydebug;
 #define tPF 270
 #define tACCO 271
 #define tACCF 272
+<<<<<<< HEAD
 #define tIF 273
 #define tEQUAL 274
 #define tNOTEQUAL 275
 #define tNAME 276
 #define tNB 277
+=======
+#define tVIRG 273
+#define tAND 274
+#define tNAME 275
+#define tNB 276
+>>>>>>> bc87622eb8e54f935da3b8661c82b0340c5e9863
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -134,7 +143,7 @@ union YYSTYPE
 #line 14 "c.y"
  int nb; char var[64]; 
 
-#line 108 "y.tab.h"
+#line 112 "y.tab.h"
 
 <<<<<<< HEAD
 /* Line 1676 of yacc.c  */
