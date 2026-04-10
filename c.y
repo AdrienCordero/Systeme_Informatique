@@ -27,7 +27,6 @@ Main: {
       printf("Impossible d'ouvrir test.c\n");
       exit(1);
   }
-  asm_create_file();
   asm_create_file(); } tMAIN tPO tPF Bloc { print_var_addr(); asm_close_file(); 
 }
 
@@ -44,9 +43,9 @@ Instruction:
   | Variable C
   | Bloc
   | IfStatement
-  | WhileStatement
+  | Boucle
 
-WhileStatement:
+Boucle:
     tWHILE tPO Terme tNOTEQUAL Terme tPF { begin_while($3, $5); }
     Bloc { end_while(); }
 
