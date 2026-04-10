@@ -12,9 +12,10 @@ int val;
 %}
 
 %union { int nb; char var[64]; }
-%token tMAIN tPRINT tVAL tINT tCONST tEG tFI tADD tSUB tMUL tDIV tPO tPF tACCO tACCF
+%token tMAIN tPRINT tVAL tINT tCONST tEG tFI tADD tSUB tMUL tDIV tPO tPF tACCO tACCF tVIRG tAND
 %token <var> tNAME
 %token <nb> tNB
+%left tNAME
 %left tADD tSUB
 %left tMUL tDIV
 %type <nb> Terme
@@ -50,13 +51,19 @@ Bloc:
 // Déclaration des valeurs
 Variable:
     tINT Name_var tFI
-  | tINT tNAME tEG Terme tFI { decl($2); assign($2, $4); }
+  | tINT tNAME tEG Terme tFI { decl($2, false); assign($2, $4); }
   | tCONST tINT tNAME tEG Terme tFI { decl_assign_const($3, $5); }
   | tNAME tEG Terme tFI { assign($1, $3); }
+  | tINT tMUL Name_pointer tFI
+  | tINT tMUL tNAME tEG tAND tNAME tFI { decl($3, true); printf("%d\n", get_var($6)); assign($3, get_var($6)); }
 
 Name_var:
-    tNAME { decl($1); }
-  | tNAME { decl($1); } Name_var
+    tNAME { decl($1, false); }
+  | tNAME { decl($1, false); } tVIRG Name_var
+
+Name_pointer:
+    tNAME { decl($1, true); }
+  | tNAME { decl($1, true); } tVIRG Name_var
 
 //  Calcul
 Terme : 
@@ -66,6 +73,7 @@ Terme :
   | Terme tMUL Terme { $$ = op_var(OP_MUL, $1, $3); }
   | Terme tDIV Terme { $$ = op_var(OP_DIV, $1, $3); }
   | tPO Terme tPF { $$ = $2; }
+  | tMUL tNAME { int a = get_value_pointer($2); printf("%d\n", a); $$ = a; }
   | tNAME { $$ = get_var($1); }
 
 %%

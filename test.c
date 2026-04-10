@@ -1,9 +1,6 @@
 main()
 {
-    int i, j;
-    j = 1;
-    i = 2 + 3;
-    int k = i;
-    int m = 0;
-    int l = k + m;
+    int a = 1;
+    int *test = &a;
+    int b = *test;
 }

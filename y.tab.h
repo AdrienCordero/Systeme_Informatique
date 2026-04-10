@@ -69,8 +69,10 @@ extern int yydebug;
     tPF = 270,                     /* tPF  */
     tACCO = 271,                   /* tACCO  */
     tACCF = 272,                   /* tACCF  */
-    tNAME = 273,                   /* tNAME  */
-    tNB = 274                      /* tNB  */
+    tVIRG = 273,                   /* tVIRG  */
+    tAND = 274,                    /* tAND  */
+    tNAME = 275,                   /* tNAME  */
+    tNB = 276                      /* tNB  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -94,8 +96,10 @@ extern int yydebug;
 #define tPF 270
 #define tACCO 271
 #define tACCF 272
-#define tNAME 273
-#define tNB 274
+#define tVIRG 273
+#define tAND 274
+#define tNAME 275
+#define tNB 276
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -104,7 +108,7 @@ union YYSTYPE
 #line 14 "c.y"
  int nb; char var[64]; 
 
-#line 108 "y.tab.h"
+#line 112 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

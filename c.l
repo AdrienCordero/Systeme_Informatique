@@ -30,9 +30,10 @@
 "}" { return tACCF; }
 " " {}
 ";" { return tFI; }
+"&" { return tAND; }
 
 [\t] {}
-"," {}
+"," { return tVIRG; }
 [\n] {}
 
 
