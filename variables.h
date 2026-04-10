@@ -10,6 +10,7 @@ typedef struct {
 } var_int_t;
 
 typedef enum { OP_ADD, OP_SUB, OP_MUL, OP_DIV } OPERATION;
+typedef enum { OP_EQU, OP_SUP} COMPARAISON;
 
 void print_var_addr();
 

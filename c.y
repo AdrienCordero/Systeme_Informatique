@@ -46,7 +46,7 @@ Instruction:
   | Boucle
 
 Boucle:
-    tWHILE tPO Terme tNOTEQUAL Terme tPF { begin_while($3, $5); }
+    tWHILE tPO Terme tEqual Terme tPF { begin_while($3, $5); }
     Bloc { end_while(); }
 
 IfStatement:

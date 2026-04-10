@@ -16,7 +16,7 @@
 "while" { return tWHILE; }
 "if" { return tIF; }
 "==" { return tEQUAL; }
-"!=" { return tNOTEQUAL; }
+//"!=" { return tNOTEQUAL; }
 [0-9]+	{
 	  yylval.nb = atoi(yytext);
 	  return tNB;}

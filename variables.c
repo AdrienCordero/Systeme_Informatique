@@ -119,3 +119,23 @@ int compare_ne(int a, int b) {
     asm_jne(a, b, -1);
     return result;
 }
+
+//Retourne la ligne du début de l'instruction
+int if_code(int a, int b){
+    int check = decl(""); //Cette variable existe en mémoire mais on ne la note pas en ASM
+    //On écrit ensuite en asm la condition
+    asm_eq(check, a, b);
+    //On va ensuite aller jump si le resultat est faux
+    asm_jne(check);
+    
+    //Va compter le nombre dinstruction écrite 
+    int compt =  0;//extern num_instruction;
+    int flag = verification(a, b);
+    
+}
+
+int verification(int a, int b){
+    if (a==b)
+        return 1;
+    else return 0;
+}
