@@ -11,7 +11,7 @@ int nb_var = 0;
 void print_var_addr() {
     for (int i=0; i < nb_var; i++)
         if (strcmp(table_var[i].name, "") != 0)
-            printf("%s : %d\n", table_var[i].name, table_var[i].addr_val);
+            printf("%s : %d\n", table_var[i].name, table_var[i].addr);
 }
 
 int decl(char* name, bool is_pointer) {
@@ -32,11 +32,11 @@ int decl(char* name, bool is_pointer) {
         table_var = realloc(table_var, max_var * sizeof(int));
     }
     strcpy(table_var[nb_var].name, name);
-    table_var[nb_var].addr_val = nb_var;
+    table_var[nb_var].addr = nb_var;
     table_var[nb_var].is_const = false;
     table_var[nb_var].is_pointer = is_pointer;
     nb_var++;
-    return table_var[nb_var-1].addr_val;
+    return table_var[nb_var-1].addr;
 }
 
 void assign(char* name, int addr) {
@@ -47,8 +47,8 @@ void assign(char* name, int addr) {
                 return;
             }
             int new_addr = decl("", false);
-            table_var[i].addr_val = new_addr;
-            table_var[new_addr].addr_val = addr;
+            table_var[i].addr = new_addr;
+            table_var[new_addr].addr = addr;
             asm_cop(new_addr, addr);
         }
     }
@@ -58,30 +58,29 @@ void decl_assign_const(char* name, int val) {
     decl(name, false);
     table_var[nb_var - 1].is_const = true;
     table_var[nb_var - 1].is_pointer = false;
-    asm_afc(table_var[nb_var - 1].addr_val, val);
+    asm_afc(table_var[nb_var - 1].addr, val);
 }
 
 int get_var(char* name) {
     for (int i=0; i < nb_var; i++)
         if (strcmp(name, table_var[i].name) == 0)
-            return table_var[i].addr_val;
+            return table_var[i].addr;
     printf("Aucune variable ne possède ce nom");
     return -1;
 }
 
 int get_value(int addr) {
     for (int i=0; i < nb_var; i++)
-        if (table_var[i].addr_val == addr)
-            return table_var[i].addr_val;
+        if (table_var[i].addr == addr)
+            return table_var[i].addr;
 }
 
 int get_value_pointer(char* name) {
     int addr = get_var(name);
     if (addr == -1)
         return -1;
-    printf("val %s : %d\n", name, addr);
     if (addr < nb_var)
-        return table_var[get_value(addr)].addr_val;
+        return table_var[get_value(addr)].addr;
     printf("Aucune variable n'est a cette adresse");
     return 0;
 }

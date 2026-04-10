@@ -5,7 +5,7 @@
 
 typedef struct {
   char name[64];
-  int addr_val;
+  int addr;
   bool is_const;
   bool is_pointer;
 } var_int_t;

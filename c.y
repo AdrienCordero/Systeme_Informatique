@@ -55,7 +55,7 @@ Variable:
   | tCONST tINT tNAME tEG Terme tFI { decl_assign_const($3, $5); }
   | tNAME tEG Terme tFI { assign($1, $3); }
   | tINT tMUL Name_pointer tFI
-  | tINT tMUL tNAME tEG tAND tNAME tFI { decl($3, true); printf("%d\n", get_var($6)); assign($3, get_var($6)); }
+  | tINT tMUL tNAME tEG tAND tNAME tFI { decl($3, true); assign($3, get_var($6)); }
 
 Name_var:
     tNAME { decl($1, false); }
@@ -73,7 +73,7 @@ Terme :
   | Terme tMUL Terme { $$ = op_var(OP_MUL, $1, $3); }
   | Terme tDIV Terme { $$ = op_var(OP_DIV, $1, $3); }
   | tPO Terme tPF { $$ = $2; }
-  | tMUL tNAME { int a = get_value_pointer($2); printf("%d\n", a); $$ = a; }
+  | tMUL tNAME { $$ = get_value_pointer($2); }
   | tNAME { $$ = get_var($1); }
 
 %%

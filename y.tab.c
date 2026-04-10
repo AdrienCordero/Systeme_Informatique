@@ -1272,7 +1272,7 @@ yyreduce:
 
   case 19: /* Variable: tINT tMUL tNAME tEG tAND tNAME tFI  */
 #line 58 "c.y"
-                                       { decl((yyvsp[-4].var), true); printf("%d\n", get_var((yyvsp[-1].var))); assign((yyvsp[-4].var), get_var((yyvsp[-1].var))); }
+                                       { decl((yyvsp[-4].var), true); assign((yyvsp[-4].var), get_var((yyvsp[-1].var))); }
 #line 1277 "y.tab.c"
     break;
 
@@ -1338,7 +1338,7 @@ yyreduce:
 
   case 32: /* Terme: tMUL tNAME  */
 #line 76 "c.y"
-               { int a = get_value_pointer((yyvsp[0].var)); printf("%d\n", a); (yyval.nb) = a; }
+               { (yyval.nb) = get_value_pointer((yyvsp[0].var)); }
 #line 1343 "y.tab.c"
     break;
 
