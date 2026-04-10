@@ -27,7 +27,6 @@ Main: {
       printf("Impossible d'ouvrir test.c\n");
       exit(1);
   }
-  asm_create_file();
   asm_create_file(); } tMAIN tPO tPF Bloc { print_var_addr(); asm_close_file(); 
 }
 
