@@ -54,13 +54,13 @@
 #endif
 typedef void (*funcp)(char *, char *);
 extern int main(int, char**);
-IKI_DLLESPEC extern void execute_37(char*, char *);
-IKI_DLLESPEC extern void execute_38(char*, char *);
+IKI_DLLESPEC extern void execute_43(char*, char *);
+IKI_DLLESPEC extern void execute_44(char*, char *);
+IKI_DLLESPEC extern void execute_45(char*, char *);
 IKI_DLLESPEC extern void execute_39(char*, char *);
-IKI_DLLESPEC extern void execute_33(char*, char *);
 IKI_DLLESPEC extern void vhdl_transfunc_eventcallback(char*, char*, unsigned, unsigned, unsigned, char *);
 IKI_DLLESPEC extern void transaction_2(char*, char*, unsigned, unsigned, unsigned);
-funcp funcTab[6] = {(funcp)execute_37, (funcp)execute_38, (funcp)execute_39, (funcp)execute_33, (funcp)vhdl_transfunc_eventcallback, (funcp)transaction_2};
+funcp funcTab[6] = {(funcp)execute_43, (funcp)execute_44, (funcp)execute_45, (funcp)execute_39, (funcp)vhdl_transfunc_eventcallback, (funcp)transaction_2};
 const int NumRelocateId= 6;
 
 void relocate(char *dp)

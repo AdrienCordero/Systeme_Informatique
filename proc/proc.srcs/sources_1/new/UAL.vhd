@@ -48,25 +48,87 @@ architecture Behavioral of UAL is
 begin
     process 
         variable tmp_add : UNSIGNED (8 downto 0);
+        variable tmp_sub_div : UNSIGNED (7 downto 0);
         variable tmp_res : UNSIGNED(15 downto 0);
     begin
         wait until Ctrl_Alu'event and Ctrl_Alu /= "000"; -- detecter changement
         case Ctrl_Alu is
+        
+        ----------------------- ADD ----------------------------
         when "001" =>
             tmp_add := ('0' & UNSIGNED(A)) + ('0' & UNSIGNED(B));
             S <= STD_LOGIC_VECTOR(tmp_add(7 downto 0));
             if (tmp_add(8) = '1') then
                 C <= '1';
+                O <= '1';
             else
                 C <= '0';
+                O <= '0';
             end if;
+            if (tmp_add < 0) then
+                N <= '1';
+            else
+                N <= '0';
+            end if;
+            if (tmp_add = 0) then
+                Z <= '1';
+            else
+                Z <= '0';
+            end if;
+            
+        ----------------------- SUB ----------------------------
         when "010" =>
-            S <= A - B;
+            tmp_sub_div := UNSIGNED(A) - UNSIGNED(B);
+            S <= STD_LOGIC_VECTOR(tmp_sub_div);
+            if (tmp_sub_div < 0) then
+                N <= '1';
+            else
+                N <= '0';
+            end if;
+            if (tmp_sub_div = 0) then
+                Z <= '1';
+            else
+                Z <= '0';
+            end if;
+            
+        ----------------------- MUL ----------------------------
         when "011" =>
             tmp_res := UNSIGNED(A) * UNSIGNED(B);
             S <= STD_LOGIC_VECTOR(tmp_res(7 downto 0));
-        when others =>
-            S <= (others => '0');
+            if (tmp_res > 128) then
+                O <= '1';
+            else
+                O <= '0';
+            end if;
+            if (tmp_res < 0) then
+                N <= '1';
+            else
+                N <= '0';
+            end if;
+            if (tmp_res = 0) then
+                Z <= '1';
+            else
+                Z <= '0';
+            end if;
+            
+        ----------------------- DIV ----------------------------
+        when "100" =>
+            if (B = 0) then
+                S <= "00000000";
+            else
+                tmp_sub_div := UNSIGNED(A) / UNSIGNED(B);
+                S <= STD_LOGIC_VECTOR(tmp_sub_div);
+                if (tmp_sub_div < 0) then
+                    N <= '1';
+                else
+                    N <= '0';
+                end if;
+                if (tmp_sub_div = 0) then
+                    Z <= '1';
+                else
+                    Z <= '0';
+                end if;
+            end if;
         end case;
     end process;
 end Behavioral;
