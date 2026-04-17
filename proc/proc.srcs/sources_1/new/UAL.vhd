@@ -55,7 +55,7 @@ begin
         when "001" =>
             tmp_add := ('0' & UNSIGNED(A)) + ('0' & UNSIGNED(B));
             S <= STD_LOGIC_VECTOR(tmp_add(7 downto 0));
-            if (tmp_add > 128) then
+            if (tmp_add(8) = '1') then
                 C <= '1';
             else
                 C <= '0';
