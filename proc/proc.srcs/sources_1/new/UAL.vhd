@@ -45,18 +45,26 @@ entity UAL is
 end UAL;
 
 architecture Behavioral of UAL is
-    signal mult : signed(15 downto 0);
 begin
-    process begin
+    process 
+        variable tmp_add : UNSIGNED (8 downto 0);
+        variable tmp_res : UNSIGNED(15 downto 0);
+    begin
         wait until Ctrl_Alu'event and Ctrl_Alu /= "000"; -- detecter changement
         case Ctrl_Alu is
         when "001" =>
-            S <= A + B;
+            tmp_add := ('0' & UNSIGNED(A)) + ('0' & UNSIGNED(B));
+            S <= STD_LOGIC_VECTOR(tmp_add(7 downto 0));
+            if (tmp_add > 128) then
+                C <= '1';
+            else
+                C <= '0';
+            end if;
         when "010" =>
             S <= A - B;
         when "011" =>
-            mult <= signed(A) * signed(B);
-            S <= STD_LOGIC_VECTOR(mult(7 downto 0));
+            tmp_res := UNSIGNED(A) * UNSIGNED(B);
+            S <= STD_LOGIC_VECTOR(tmp_res(7 downto 0));
         when others =>
             S <= (others => '0');
         end case;
