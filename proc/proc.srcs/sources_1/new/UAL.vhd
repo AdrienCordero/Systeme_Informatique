@@ -129,6 +129,9 @@ begin
                     Z <= '0';
                 end if;
             end if;
+            
+        when others =>
+            S <= "00000000";
         end case;
     end process;
 end Behavioral;
