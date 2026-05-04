@@ -1,7 +1,7 @@
 Vivado Simulator v2024.2.0
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
 Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
-Running: /usr/local/Xilinx/Vivado/2024.2/bin/unwrapped/lnx64.o/xelab --incr --debug typical --relax --mt 8 -L xil_defaultlib -L secureip --snapshot Registers_test_behav xil_defaultlib.Registers_test -log elaborate.log 
+Running: /usr/local/Xilinx/Vivado/2024.2/bin/unwrapped/lnx64.o/xelab --incr --debug typical --relax --mt 8 -L xil_defaultlib -L secureip --snapshot DataMemoryTest_behav xil_defaultlib.DataMemoryTest -log elaborate.log 
 Using 8 slave threads.
 Starting static elaboration
 Completed static elaboration
@@ -12,6 +12,6 @@ Compiling package std.standard
 Compiling package std.textio
 Compiling package ieee.std_logic_1164
 Compiling package ieee.numeric_std
-Compiling architecture behavioral of entity xil_defaultlib.Registers [registers_default]
-Compiling architecture behavioral of entity xil_defaultlib.registers_test
-Built simulation snapshot Registers_test_behav
+Compiling architecture behavioral of entity xil_defaultlib.DataMemory [datamemory_default]
+Compiling architecture behavioral of entity xil_defaultlib.datamemorytest
+Built simulation snapshot DataMemoryTest_behav
