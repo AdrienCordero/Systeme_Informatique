@@ -10,8 +10,12 @@ typedef struct {
   bool is_pointer;
 } var_int_t;
 
+typedef struct {
+  int addr_debut;
+  int addr_fin;
+} bloc_t;
+
 typedef enum { OP_ADD, OP_SUB, OP_MUL, OP_DIV } OPERATION;
-typedef enum { OP_EQU, OP_SUP} COMPARAISON;
 
 void print_var_addr();
 
@@ -31,12 +35,15 @@ int create_tmp(int val);
 
 int op_var(OPERATION op, int a, int b);
 
-int get_label();
 
 int compare_ne(int a, int b);
 
-void begin_while(int a, int b);
+/* genere un JMF pour la condition (cond_addr = adresse du résultat EQU).
+   retourne l'indice de l'instruction JMF pour pouvoir la patcher ensuite. */
+int if_code(int cond_addr);
 
-void end_while(void);
+/* genere l'instruction EQU et retourne l'adresse du résultat */
+int verify(int a, int b);
+
 
 #endif

@@ -7,103 +7,129 @@
 extern FILE *yyin;
 void yyerror(char *s);
 
-char* var[100];
-int val;
 %}
 
 %union { int nb; char var[64]; }
-<<<<<<< HEAD
-%token tMAIN tPRINT tVAL tINT tCONST tEG tFI tADD tSUB tMUL tDIV tPO tPF tACCO tACCF tIF tWHILE tEQUAL tNOTEQUAL
-=======
-%token tMAIN tPRINT tVAL tINT tCONST tEG tFI tADD tSUB tMUL tDIV tPO tPF tACCO tACCF tVIRG tAND
->>>>>>> bc87622eb8e54f935da3b8661c82b0340c5e9863
+%token tMAIN tPRINT tINT tCONST tEG tFI tADD tSUB tMUL tDIV tPO tPF tACCO tACCF tVIRG tAND tEQUAL tELSE
+%token <nb> tIF tWHILE
 %token <var> tNAME
 %token <nb> tNB
-%left tNAME
+
 %left tADD tSUB
 %left tMUL tDIV
-%type <nb> Terme Condition
+
+%type <nb> Terme
+%type <nb> Condition
+%type <nb> Verification
+%type <nb> ConditionHead
+
 %start Main
+
 %%
 
-Main: { 
-  yyin = fopen("test.c", "r");
-  if(!yyin) {
-      printf("Impossible d'ouvrir test.c\n");
-      exit(1);
-  }
-  asm_create_file(); } tMAIN tPO tPF Bloc { print_var_addr(); asm_close_file(); 
-}
+Main: 
+    { 
+        yyin = fopen("test.c", "r");
+        if(!yyin) {
+            printf("Erreur : Impossible d'ouvrir test.c\n");
+            exit(1);
+        }
+        asm_create_file(); 
+    } 
+    tMAIN tPO tPF Bloc 
+    { 
+        //print_var_addr();
+        generate_asm(); 
+        asm_close_file(); 
+        printf("Compilation terminée avec succès.\n");
+    }
 
-Print : tPRINT tPO Terme tPF tFI { printf("%d\n", $3); }
 
-C:
-    Instruction
-  | Instruction C
-  | Print
-  | Print C
+Bloc:
+    tACCO Instructions tACCF 
+    | tACCO tACCF
+
+/* Permet d'avoir 0, 1 ou plusieurs instructions (Récursivité gauche) */
+Instructions:
+    Instructions Instruction
+    | Instruction
 
 Instruction:
     Variable
-  | Variable C
-  | Bloc
-  | IfStatement
-  | Boucle
+    | Condition
+    | Boucle
+    | Print
+    | Bloc
 
-Boucle:
-    tWHILE tPO Terme tEqual Terme tPF { begin_while($3, $5); }
-    Bloc { end_while(); }
+Print: 
+    tPRINT tPO Terme tPF tFI { printf("Runtime Print: %d\n", $3); }
 
-IfStatement:
-    tIF tPO Condition tPF Bloc {
-        asm_label(get_label() - 1);
+ConditionHead:
+    tIF tPO Verification tPF
+    {
+        $$ = if_code($3);
     }
 
 Condition:
-    Terme tNOTEQUAL Terme {
-        int label = get_label();
-        asm_jne($1, $3, label);
-        $$ = label;
+    ConditionHead Bloc
+    {
+        patch($1, get_num_instruction());
+    }
+    | ConditionHead Bloc
+    {
+        int jmp_idx = jump_code();
+        patch($1, get_num_instruction());
+        $<nb>$ = jmp_idx;
+    }
+    tELSE Bloc
+    {
+        patch($<nb>3, get_num_instruction());
     }
 
-Bloc:
-    tACCO Instruction tACCF
-  | tACCO tACCF
+Boucle:
+    tWHILE
+    { $1 = get_num_instruction(); }
+    tPO Verification tPF
+    { $<nb>$ = if_code($4); }
+    Bloc
+    {
+        asm_jmp($1);
+        patch($<nb>6, get_num_instruction());
+    }
 
-// Déclaration des valeurs
+Verification:
+    Terme tEQUAL Terme { $$ = verify($1, $3); } 
+
 Variable:
     tINT Name_var tFI
-  | tINT tNAME tEG Terme tFI { decl($2, false); assign($2, $4); }
-  | tCONST tINT tNAME tEG Terme tFI { decl_assign_const($3, $5); }
-  | tNAME tEG Terme tFI { assign($1, $3); }
-  | tINT tMUL Name_pointer tFI
-  | tINT tMUL tNAME tEG tAND tNAME tFI { decl($3, true); assign($3, get_var($6)); }
+    | tINT tNAME tEG Terme tFI { decl($2, 0); assign($2, $4); }
+    | tCONST tINT tNAME tEG Terme tFI { decl_assign_const($3, $5); }
+    | tNAME tEG Terme tFI { assign($1, $3); }
+    | tINT tMUL Name_pointer tFI
+    | tINT tMUL tNAME tEG tAND tNAME tFI { decl($3, 1); assign($3, get_var($6)); }
 
 Name_var:
-    tNAME { decl($1, false); }
-  | tNAME { decl($1, false); } tVIRG Name_var
+    tNAME { decl($1, 0); }
+    | tNAME tVIRG { decl($1, 0); } Name_var
 
 Name_pointer:
-    tNAME { decl($1, true); }
-  | tNAME { decl($1, true); } tVIRG Name_var
+    tNAME { decl($1, 1); }
+    | tNAME tVIRG { decl($1, 1); } Name_pointer
 
-//  Calcul
-Terme : 
+Terme: 
     tNB { $$ = create_tmp($1); }
-  | Terme tADD Terme { $$ = op_var(OP_ADD, $1, $3); }
-  | Terme tSUB Terme { $$ = op_var(OP_SUB, $1, $3); }
-  | Terme tMUL Terme { $$ = op_var(OP_MUL, $1, $3); }
-  | Terme tDIV Terme { $$ = op_var(OP_DIV, $1, $3); }
-  | tPO Terme tPF { $$ = $2; }
-  | tMUL tNAME { $$ = get_value_pointer($2); }
-  | tNAME { $$ = get_var($1); }
+    | Terme tADD Terme { $$ = op_var(OP_ADD, $1, $3); }
+    | Terme tSUB Terme { $$ = op_var(OP_SUB, $1, $3); }
+    | Terme tMUL Terme { $$ = op_var(OP_MUL, $1, $3); }
+    | Terme tDIV Terme { $$ = op_var(OP_DIV, $1, $3); }
+    | tPO Terme tPF { $$ = $2; }
+    | tMUL tNAME { $$ = get_value_pointer($2); }
+    | tNAME { $$ = get_var($1); }
 
 %%
 
-void yyerror(char *s) { fprintf(stderr, "%s\n", s); }
+void yyerror(char *s) { fprintf(stderr, "Erreur syntaxique : %s\n", s); }
 
 int main(void) {
-  // yydebug=1;
-  yyparse();
-  return 0;
+    return yyparse();
 }

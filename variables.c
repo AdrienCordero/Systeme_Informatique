@@ -7,9 +7,9 @@
 int max_var = 0;
 var_int_t *table_var;
 int nb_var = 0;
-int label_count = 0;
 int while_start = 0;
 int while_end = 0;
+
 
 void print_var_addr() {
     for (int i=0; i < nb_var; i++)
@@ -46,15 +46,14 @@ void assign(char* name, int addr) {
     for (int i=0; i < nb_var; i++) {
         if (strcmp(name, table_var[i].name) == 0) {
             if (table_var[i].is_const) {
-                printf("impossible d'assigner une valeur à une variable constante\n");
+                printf("impossible d'assigner une valeur à une constante\n");
                 return;
             }
-            int new_addr = decl("", false);
-            table_var[i].addr = new_addr;
-            table_var[new_addr].addr = addr;
-            asm_cop(new_addr, addr);
+            asm_cop(table_var[i].addr, addr);
+            return;
         }
     }
+    printf("Variable non déclarée: %s\n", name);
 }
 
 void decl_assign_const(char* name, int val) {
@@ -112,49 +111,15 @@ int op_var(OPERATION op, int a, int b) {
     }
     return addr_res;
 }
-
-int get_label() {
-    return label_count++;
+int if_code(int cond_addr){
+    int idx = get_num_instruction();   
+    asm_jmf(cond_addr, 0);             
+    return idx;
 }
 
-void begin_while(int a, int b) {
-    while_start = get_label();
-    int body = get_label();
-    while_end = get_label();
-
-    asm_label(while_start);
-    asm_jne(a, b, body);
-    asm_jump(while_end);
-    asm_label(body);
+int verify(int a, int b){
+    int val0 = decl("", false);
+    asm_eq(val0, a, b);
+    return val0;
 }
 
-void end_while(void) {
-    asm_jump(while_start);
-    asm_label(while_end);
-}
-
-int compare_ne(int a, int b) {
-    int result = decl("");
-    asm_jne(a, b, -1);
-    return result;
-}
-
-//Retourne la ligne du début de l'instruction
-int if_code(int a, int b){
-    int check = decl(""); //Cette variable existe en mémoire mais on ne la note pas en ASM
-    //On écrit ensuite en asm la condition
-    asm_eq(check, a, b);
-    //On va ensuite aller jump si le resultat est faux
-    asm_jne(check);
-    
-    //Va compter le nombre dinstruction écrite 
-    int compt =  0;//extern num_instruction;
-    int flag = verification(a, b);
-    
-}
-
-int verification(int a, int b){
-    if (a==b)
-        return 1;
-    else return 0;
-}

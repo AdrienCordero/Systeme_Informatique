@@ -15,8 +15,9 @@
 "printf" { return tPRINT; }
 "while" { return tWHILE; }
 "if" { return tIF; }
+"else" { return tELSE; }
 "==" { return tEQUAL; }
-//"!=" { return tNOTEQUAL; }
+
 [0-9]+	{
 	  yylval.nb = atoi(yytext);
 	  return tNB;}
