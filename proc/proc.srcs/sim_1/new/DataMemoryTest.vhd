@@ -78,5 +78,4 @@ begin
     sRW <= '0', '1' after 100ns, '0' after 200ns, '1' after 210ns;
     sRST <= '1';
     
-
 end Behavioral;
