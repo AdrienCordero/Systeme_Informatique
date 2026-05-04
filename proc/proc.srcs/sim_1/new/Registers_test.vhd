@@ -78,20 +78,21 @@ begin
     );
     
     --Clock process definitions
-    --process
-    --begin
-    --    sCLK <= not(sCLK);
-    --    wait for clk_period/2;
-    --end process;
+    process
+    begin
+        sCLK <= not(sCLK);
+        wait for clk_period/2;
+    end process;
     
-    sCLK <= '0', '1' after 100ns;
+    -- ecrire 2 dans 0001 puis 4 après 200ns
+    -- ecrire 3 dans 0010 après 100ns
+    sW <= '1';
+    sDATA <= "00000010", "00000011" after 100ns, "00000100" after 200ns;
+    saddr_W <= "0001", "0010" after 100ns, "0001" after 200ns;
     
-
-    saddr_A <= "0000", "0001" after 150ns, "0011" after 250ns;
-    saddr_B <= "0000", "0010" after 150ns;
-    saddr_W <= "0001", "0010" after 50ns, "0011" after 100ns;
-    sW <= '1', '0' after 150ns;
-    sDATA <= "00000001", "00000010" after 50ns, "00000011" after 100ns;
-    sRST <= '0', '1' after 300ns;
-    sCLK <= '0';
+    saddr_A <= "0000", "0001" after 10ns;
+    saddr_B <= "0000", "0010" after 100ns;
+    
+    sRST <= '1', '0' after 300ns;
+        
 end Behavioral;

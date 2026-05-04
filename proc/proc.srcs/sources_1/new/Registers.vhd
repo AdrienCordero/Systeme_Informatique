@@ -48,22 +48,23 @@ architecture Behavioral of Registers is
     type array_logic_vector is array (0 to 15) OF STD_LOGIC_VECTOR(7 downto 0);
     signal registers_tab : array_logic_vector;
 begin
-    process begin
-        wait until CLK'event and CLK = '1'; -- Detecter front montant de l'horloge
-        
+    process (CLK, RST)
+    begin        
+    
         ----------------------- WRITE ----------------------------
         if (W = '1') then
-            registers_tab(TO_INTEGER(SIGNED(addr_W))) <= DATA;
+            registers_tab(TO_INTEGER(UNSIGNED(addr_W))) <= DATA;
         end if;
-            
-        ----------------------- READ ----------------------------
-        QA <= registers_tab(TO_INTEGER(SIGNED(addr_A)));
-        QB <= registers_tab(TO_INTEGER(SIGNED(addr_B)));
         
          ----------------------- RST ----------------------------
         if (RST = '0') then
             QA <= "00000000";
             QB <= "00000000";
+            registers_tab <= (others => "00000000");
         end if;
+        
+        ----------------------- READ ----------------------------
+        QA <= registers_tab(TO_INTEGER(UNSIGNED(addr_A)));
+        QB <= registers_tab(TO_INTEGER(UNSIGNED(addr_B)));
     end process;
 end Behavioral;
