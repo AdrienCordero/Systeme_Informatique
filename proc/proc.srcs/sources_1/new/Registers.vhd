@@ -49,7 +49,7 @@ architecture Behavioral of Registers is
     signal registers_tab : array_logic_vector;
 begin
     process (CLK, RST)
-    begin        
+    begin
     
         ----------------------- WRITE ----------------------------
         if (W = '1') then

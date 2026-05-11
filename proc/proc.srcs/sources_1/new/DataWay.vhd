@@ -21,6 +21,7 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.numeric_std.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -32,11 +33,13 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity DataWay is
-    Port (CLK : in STD_LOGIC);
+    Port (
+        CLK : in STD_LOGIC;
+        IP : in STD_LOGIC_VECTOR(7 downto 0)
+    );
 end DataWay;
 
 architecture Behavioral of DataWay is
-
 
     ------INSTRUCTION MEMORY------
     
@@ -47,8 +50,8 @@ architecture Behavioral of DataWay is
     end component;
     
     signal sInstructionADDR : STD_LOGIC_VECTOR(7 downto 0);
-    signal sInstructionCLK: STD_LOGIC;
     signal sInstructionOUTPUT: STD_LOGIC_VECTOR(31 downto 0);
+    signal sInstructionOP : STD_LOGIC_VECTOR(7 downto 0);
     
     
     ------DATA MEMORY------
@@ -62,12 +65,12 @@ architecture Behavioral of DataWay is
         OUTPUT : out STD_LOGIC_VECTOR(7 downto 0));
     end component;
     
-        signal sDMsDMADDR : STD_LOGIC_VECTOR(7 downto 0);
-        signal sDMINPUT : STD_LOGIC_VECTOR(7 downto 0);
-        signal sDMRW : STD_LOGIC;
-        signal sDMRST : STD_LOGIC;
-        signal sDMCLK : STD_LOGIC;
-        signal sDMOUTPUT :  STD_LOGIC_VECTOR(7 downto 0);
+    signal sDMADDR : STD_LOGIC_VECTOR(7 downto 0);
+    signal sDMINPUT : STD_LOGIC_VECTOR(7 downto 0);
+    signal sDMRW : STD_LOGIC;
+    signal sDMRST : STD_LOGIC;
+    signal sDMOUTPUT :  STD_LOGIC_VECTOR(7 downto 0);
+    signal sDMOP : STD_LOGIC_VECTOR(7 downto 0);
     
     ------REGISTERS------
     
@@ -83,15 +86,15 @@ architecture Behavioral of DataWay is
         QB : out STD_LOGIC_VECTOR(7 downto 0));
     end component;
     
-    signal sRegisteraddr_A : in STD_LOGIC_VECTOR(3 downto 0);
-    signal sRegisteraddr_B : in STD_LOGIC_VECTOR(3 downto 0);
-    signal sRegisteraddr_W : in STD_LOGIC_VECTOR(3 downto 0);
-    signal sRegisterW : in STD_LOGIC;
-    signal sRegisterDATA : in STD_LOGIC_VECTOR(7 downto 0);
-    signal sRegisterRST : in STD_LOGIC;
-    signal sRegisterCLK : in STD_LOGIC;
-    signal sRegisterQA : out STD_LOGIC_VECTOR(7 downto 0);
-    signal sRegisterQB : out STD_LOGIC_VECTOR(7 downto 0)
+    signal sRegisteraddr_A : STD_LOGIC_VECTOR(3 downto 0);
+    signal sRegisteraddr_B : STD_LOGIC_VECTOR(3 downto 0);
+    signal sRegisteraddr_W : STD_LOGIC_VECTOR(3 downto 0);
+    signal sRegisterW : STD_LOGIC;
+    signal sRegisterDATA : STD_LOGIC_VECTOR(7 downto 0);
+    signal sRegisterRST : STD_LOGIC;
+    signal sRegisterQA : STD_LOGIC_VECTOR(7 downto 0);
+    signal sRegisterQB : STD_LOGIC_VECTOR(7 downto 0);
+    signal sRegisterOP : STD_LOGIC_VECTOR(7 downto 0);
     
     ------UAL------
     
@@ -105,20 +108,89 @@ architecture Behavioral of DataWay is
         C : out STD_LOGIC;
         S : out STD_LOGIC_VECTOR(7 downto 0));
     end component;
-
+    
+    signal sA : STD_LOGIC_VECTOR(7 downto 0);
+    signal sB : STD_LOGIC_VECTOR(7 downto 0);
+    signal sCtrl_Alu : STD_LOGIC_VECTOR(2 downto 0);
+    signal sN : STD_LOGIC;
+    signal sO : STD_LOGIC;
+    signal sZ : STD_LOGIC;
+    signal sC: STD_LOGIC;
+    signal sS : STD_LOGIC_VECTOR(7 downto 0);
+    signal sOP : STD_LOGIC_VECTOR(7 downto 0);
+    
 begin
 
-    process (CLK)
-        variable ip : INTEGER; -- instruction pointer
+    instruction_memory : InstructionMemory PORT MAP(
+        ADDR => sInstructionADDR,
+        CLK => CLK,
+        OUTPUT => sInstructionOUTPUT
+    );
+              
+    registers_file : Registers PORT MAP(
+        addr_A => sRegisteraddr_A,
+        addr_B => sRegisteraddr_B,
+        addr_W => sRegisteraddr_W,
+        W => sRegisterW,
+        DATA => sRegisterDATA,
+        RST => sRegisterRST,
+        CLK => CLK,
+        QA => sRegisterQA,
+        QB => sRegisterQB
+    );
+    
+    data_memory: DataMemory PORT MAP(
+        ADDR => sDMADDR,
+        INPUT => sDMINPUT,
+        RW => sDMRW,
+        RST => sDMRST,
+        CLK => CLK,
+        OUTPUT => sDMOUTPUT
+    );
+          
+    unit_al: UAL PORT MAP(
+        A => sA,
+        B => sB,
+        Ctrl_Alu => sCtrl_Alu,
+        N => sN,
+        O => sO,
+        Z => sZ,
+        C => sC,
+        S => sS 
+    );
+         
+    LI_DI : process (CLK)
     begin
-    
-        obj : InstructionMemory PORT MAP(
-            sInstructionADDR => ADDR,
-            sInstructionCLK => CLK,
-            sInstructionOUTPUT => OUTPUT);
-    
-        InstructionADDR <= STD_LOGIC_VECTOR(ip);
+        sInstructionADDR <= STD_LOGIC_VECTOR(IP);
         
-        
+        sRegisteraddr_A <= sInstructionOUTPUT(19 downto 16);
+        sRegisteraddr_B <= sInstructionOUTPUT(11 downto 8);
+        sRegisterOP <= sInstructionOUTPUT(31 downto 24);        
     end process;
+    
+    DI_EX : process(CLK)
+    begin
+        sA <= "0000"&sRegisteraddr_A;
+        sB <= "0000"&sRegisteraddr_B;
+        sOP <= sRegisterOP;
+    end process;
+    
+    EX_Mem : process(CLK)
+    begin
+        sDMADDR <= sA;
+        sDMINPUT <= sB;
+        sDMOP <= sOP;
+    end process;
+    
+    Mem_RE : process(CLK)
+    begin
+        sRegisteraddr_W <= sDMADDR(3 downto 0);
+        sRegisterDATA <= sDMINPUT;
+        if (sDMOP = "00000110") then
+            sRegisterW <= '1';
+        else
+            sRegisterW <= '0';
+        end if;
+    end process;
+    
 end Behavioral;

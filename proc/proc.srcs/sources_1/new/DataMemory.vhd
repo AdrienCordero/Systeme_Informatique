@@ -48,20 +48,20 @@ begin
     process (CLK, RST)
     begin
     
-    -- READ
-    if (RW = '1') then
-        OUTPUT <= memory_tab(TO_INTEGER(UNSIGNED(ADDR)));
+        -- READ
+        if (RW = '1') then
+            OUTPUT <= memory_tab(TO_INTEGER(UNSIGNED(ADDR)));
+            
+        -- WRITE
+        else
+            memory_tab(TO_INTEGER(UNSIGNED(ADDR))) <= INPUT;
+        end if;
         
-    -- WRITE
-    else
-        memory_tab(TO_INTEGER(UNSIGNED(ADDR))) <= INPUT;
-    end if;
-    
-    -- RST
-    if (RST = '0') then
-        OUTPUT <= "00000000";
-        memory_tab <= (others => "00000000");
-    end if;
+        -- RST
+        if (RST = '0') then
+            OUTPUT <= "00000000";
+            memory_tab <= (others => "00000000");
+        end if;
     
     end process;
 

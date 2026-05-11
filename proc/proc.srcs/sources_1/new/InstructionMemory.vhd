@@ -39,13 +39,20 @@ entity InstructionMemory is
 end InstructionMemory;
 
 architecture Behavioral of InstructionMemory is
-    type array_logic_vector is array (0 to 256) OF STD_LOGIC_VECTOR(7 downto 0);
+    type array_logic_vector is array (0 to 256) OF STD_LOGIC_VECTOR(31 downto 0);
     signal instruction_tab : array_logic_vector;
 begin
-
+    
+    instruction_tab(0) <= "00000110000000100000000100000000";
+    instruction_tab(1) <= "00000110000001000000001100000000";
+    instruction_tab(2) <= "00000110000000100000000100000000";
+    instruction_tab(4) <= "00000110000000100000000100000000";
+    
     process(CLK)
     begin
-        OUTPUT <= instruction_tab(TO_INTEGER(UNSIGNED(ADDR)));
+        if (rising_edge(CLK)) then
+            OUTPUT <= instruction_tab(TO_INTEGER(UNSIGNED(ADDR)));
+        end if;
     end process;
 
 end Behavioral;

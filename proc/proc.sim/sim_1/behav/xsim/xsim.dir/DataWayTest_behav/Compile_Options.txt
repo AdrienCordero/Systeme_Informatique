@@ -1,0 +1,1 @@
+--incr --debug "typical" --relax --mt "8" -L "xil_defaultlib" -L "secureip" --snapshot "DataWayTest_behav" "xil_defaultlib.DataWayTest" -log "elaborate.log" 
