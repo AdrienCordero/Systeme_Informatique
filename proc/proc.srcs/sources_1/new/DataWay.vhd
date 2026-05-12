@@ -123,6 +123,7 @@ architecture Behavioral of DataWay is
     signal sLIDIB : STD_LOGIC_VECTOR(7 downto 0);
     signal sDIEXA : STD_LOGIC_VECTOR(7 downto 0);
     signal sDIEXB : STD_LOGIC_VECTOR(7 downto 0);
+    signal sDIEXC : STD_LOGIC_VECTOR(7 downto 0);
     signal sEXMEMA : STD_LOGIC_VECTOR(7 downto 0);
     signal sEXMEMB : STD_LOGIC_VECTOR(7 downto 0);
     
@@ -168,41 +169,66 @@ begin
          
     LI_DI : process (CLK)
     begin
-        sInstructionADDR <= STD_LOGIC_VECTOR(IP);
-        
-        sLIDIA <= sInstructionOUTPUT(23 downto 16);
-        sLIDIB <= sInstructionOUTPUT(15 downto 8);
-        if sInstructionOUTPUT(31 downto 24) = "00000101" then
-            sRegisteraddr_A <= sInstructionOUTPUT(11 downto 8); -- COP
+        if rising_edge(CLK) then
+            sInstructionADDR <= STD_LOGIC_VECTOR(IP);
+            
+            sLIDIA <= sInstructionOUTPUT(23 downto 16);
+            sLIDIB <= sInstructionOUTPUT(15 downto 8);
+            if sInstructionOUTPUT(31 downto 24) = "00000101" then   -- COP
+                sRegisteraddr_A <= sInstructionOUTPUT(11 downto 8);
+            elsif sInstructionOUTPUT(31 downto 24) = "00000001" or      -- ADD
+                    sInstructionOUTPUT(31 downto 24) = "00000010" or    -- MUL
+                    sInstructionOUTPUT(31 downto 24) = "00000011" or    -- SUB
+                    sInstructionOUTPUT(31 downto 24) = "00000100" then   -- DIV
+                sRegisteraddr_A <= sInstructionOUTPUT(11 downto 8);
+                sRegisteraddr_B <= sInstructionOUTPUT(3 downto 0);
+            end if;
+            sRegisterOP <= sInstructionOUTPUT(31 downto 24); 
         end if;
-        sRegisterOP <= sInstructionOUTPUT(31 downto 24); 
     end process;
     
     DI_EX : process(CLK)
     begin
-        sDIEXA <= sLIDIA;
-        case sRegisterOP is
-            when "00000101" => sDIEXB <= sRegisterQA; -- COP
-            when others => sDIEXB <= sLIDIB;
-        end case;
-        sOP <= sRegisterOP;
+        if rising_edge(CLK) then
+            sDIEXA <= sLIDIA;
+            if sRegisterOP = "00000110" then -- AFC
+                sDIEXB <= sLIDIB;
+            elsif sRegisterOP = "00000101" then -- COP
+                sDIEXB <= sRegisterQA;
+            elsif sRegisterOP = "00000001" or -- ADD
+                sRegisterOP = "00000010" or -- MUL
+                sRegisterOP = "00000011" or -- SUB
+                sRegisterOP = "00000100" then -- DIV
+                sB <= sRegisterQB;
+                sA <= sRegisterQA;
+                sCtrl_Alu <= sRegisterOP(2 downto 0);
+            end if;
+            sOP <= sRegisterOP;
+        end if;
     end process;
     
     EX_Mem : process(CLK)
     begin
-        sEXMEMA <= sDIEXA;
-        sEXMEMB <= sDIEXB;
-        sDMOP <= sOP;
+        if rising_edge(CLK) then
+            sEXMEMA <= sDIEXA;
+            if sOP = "00000001" or -- ADD
+                sOP = "00000010" or -- MUL
+                sOP = "00000011" or -- SUB
+                sOP = "00000100" then -- DIV
+                sEXMEMB <= sS;
+            else
+                sEXMEMB <= sDIEXB;  -- AFC COP
+            end if;
+            sDMOP <= sOP;
+        end if;
     end process;
     
     Mem_RE : process(CLK)
     begin
-        sRegisteraddr_W <= sEXMEMA(3 downto 0);
-        sRegisterDATA <= sEXMEMB;
-        case sDMOP is
-            when "00000110" => sRegisterW <= '1'; -- AFC
-            when "00000101" => sRegisterW <= '1'; -- COP
-            when others => sRegisterW <= '0';
-        end case;
+        if rising_edge(CLK) then
+            sRegisteraddr_W <= sEXMEMA(3 downto 0);
+            sRegisterDATA <= sEXMEMB;
+            sRegisterW <= '1';
+        end if;
     end process;
 end Behavioral;

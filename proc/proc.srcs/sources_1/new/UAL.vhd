@@ -46,12 +46,11 @@ end UAL;
 
 architecture Behavioral of UAL is
 begin
-    process 
+    process  (Ctrl_Alu, A, B)
         variable tmp_add : UNSIGNED (8 downto 0);
         variable tmp_sub_div : UNSIGNED (7 downto 0);
         variable tmp_res : UNSIGNED(15 downto 0);
     begin
-        wait until Ctrl_Alu'event and Ctrl_Alu /= "000"; -- detecter changement
         case Ctrl_Alu is
         
         ----------------------- ADD ----------------------------
@@ -77,7 +76,7 @@ begin
             end if;
             
         ----------------------- SUB ----------------------------
-        when "010" =>
+        when "011" =>
             tmp_sub_div := UNSIGNED(A) - UNSIGNED(B);
             S <= STD_LOGIC_VECTOR(tmp_sub_div);
             if (tmp_sub_div < 0) then
@@ -92,7 +91,7 @@ begin
             end if;
             
         ----------------------- MUL ----------------------------
-        when "011" =>
+        when "010" =>
             tmp_res := UNSIGNED(A) * UNSIGNED(B);
             S <= STD_LOGIC_VECTOR(tmp_res(7 downto 0));
             if (tmp_res > 128) then

@@ -71,9 +71,9 @@ begin
         S => sS
     );
     
-    sA <= "00000100";
+    sA <= "00000001";
     --sB <= "00000010";
-    sB <= "00000010";
+    sB <= "00000001";
     sCtrl_Alu <= "000", "001" after 10ns, "010" after 200ns, "011" after 400ns, "100" after 600ns;
 
 end Behavioral;

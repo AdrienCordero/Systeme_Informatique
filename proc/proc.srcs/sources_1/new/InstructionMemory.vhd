@@ -43,10 +43,10 @@ architecture Behavioral of InstructionMemory is
     signal instruction_tab : array_logic_vector;
 begin
     
-    instruction_tab(0) <= "00000110"&"00000010"&"00000001"&"00000000"; -- Mettre 1 dans registre 2
-    instruction_tab(1) <= "00000101"&"00000011"&"00000010"&"00000000"; -- Copier registre 2 dans registre 3
-    --instruction_tab(2) <= "00000110000000100000000100000000";
-    --instruction_tab(4) <= "00000110000000100000000100000000";
+    instruction_tab(0) <= "00000110"&"00000010"&"00000001"&"00000000"; -- Mettre 1 dans r2
+    instruction_tab(1) <= "00000101"&"00000011"&"00000010"&"00000000"; -- Copier r2 dans r3
+    instruction_tab(2) <= "00000001"&"00000100"&"00000011"&"00000010"; -- r2 + r3 dans r4
+    instruction_tab(3) <= "00000010"&"00000101"&"00000100"&"00000011"; -- r4 * r3 dans r5
     
     process(CLK)
     begin

@@ -3,11 +3,11 @@
 Nov  8 2024
 22:36:55
 /home/cordero/Documents/SI/Systeme_Informatique/proc/proc.srcs/sim_1/new/DataMemoryTest.vhd,1777897614,vhdl,,,,datamemorytest,,,,,,,,
-/home/cordero/Documents/SI/Systeme_Informatique/proc/proc.srcs/sim_1/new/DataWayTest.vhd,1778593580,vhdl,,,,datawaytest,,,,,,,,
+/home/cordero/Documents/SI/Systeme_Informatique/proc/proc.srcs/sim_1/new/DataWayTest.vhd,1778602610,vhdl,,,,datawaytest,,,,,,,,
 /home/cordero/Documents/SI/Systeme_Informatique/proc/proc.srcs/sim_1/new/Registers_test.vhd,1777894781,vhdl,,,,registers_test,,,,,,,,
-/home/cordero/Documents/SI/Systeme_Informatique/proc/proc.srcs/sim_1/new/UAL_test.vhd,1776428567,vhdl,,,,ual_test,,,,,,,,
-/home/cordero/Documents/SI/Systeme_Informatique/proc/proc.srcs/sources_1/new/DataMemory.vhd,1778504055,vhdl,,,,datamemory,,,,,,,,
-/home/cordero/Documents/SI/Systeme_Informatique/proc/proc.srcs/sources_1/new/DataWay.vhd,1778596021,vhdl,,,,dataway,,,,,,,,
-/home/cordero/Documents/SI/Systeme_Informatique/proc/proc.srcs/sources_1/new/InstructionMemory.vhd,1778595831,vhdl,,,,instructionmemory,,,,,,,,
-/home/cordero/Documents/SI/Systeme_Informatique/proc/proc.srcs/sources_1/new/Registers.vhd,1778504052,vhdl,,,,registers,,,,,,,,
-/home/cordero/Documents/SI/Systeme_Informatique/proc/proc.srcs/sources_1/new/UAL.vhd,1776428928,vhdl,,,,ual,,,,,,,,
+/home/cordero/Documents/SI/Systeme_Informatique/proc/proc.srcs/sim_1/new/UAL_test.vhd,1778600328,vhdl,,,,ual_test,,,,,,,,
+/home/cordero/Documents/SI/Systeme_Informatique/proc/proc.srcs/sources_1/new/DataMemory.vhd,1778601983,vhdl,,,,datamemory,,,,,,,,
+/home/cordero/Documents/SI/Systeme_Informatique/proc/proc.srcs/sources_1/new/DataWay.vhd,1778602476,vhdl,,,,dataway,,,,,,,,
+/home/cordero/Documents/SI/Systeme_Informatique/proc/proc.srcs/sources_1/new/InstructionMemory.vhd,1778602644,vhdl,,,,instructionmemory,,,,,,,,
+/home/cordero/Documents/SI/Systeme_Informatique/proc/proc.srcs/sources_1/new/Registers.vhd,1778602009,vhdl,,,,registers,,,,,,,,
+/home/cordero/Documents/SI/Systeme_Informatique/proc/proc.srcs/sources_1/new/UAL.vhd,1778600994,vhdl,,,,ual,,,,,,,,

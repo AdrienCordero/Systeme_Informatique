@@ -50,21 +50,23 @@ architecture Behavioral of Registers is
 begin
     process (CLK, RST)
     begin
-    
-        ----------------------- WRITE ----------------------------
-        if (W = '1') then
-            registers_tab(TO_INTEGER(UNSIGNED(addr_W))) <= DATA;
-        end if;
+        if rising_edge(CLK) then
         
-         ----------------------- RST ----------------------------
-        if (RST = '0') then
-            QA <= "00000000";
-            QB <= "00000000";
-            registers_tab <= (others => "00000000");
+            ----------------------- WRITE ----------------------------
+            if (W = '1') then
+                registers_tab(TO_INTEGER(UNSIGNED(addr_W))) <= DATA;
+            end if;
+            
+             ----------------------- RST ----------------------------
+            if (RST = '0') then
+                QA <= "00000000";
+                QB <= "00000000";
+                registers_tab <= (others => "00000000");
+            end if;
+            
+            ----------------------- READ ----------------------------
+            QA <= registers_tab(TO_INTEGER(UNSIGNED(addr_A)));
+            QB <= registers_tab(TO_INTEGER(UNSIGNED(addr_B)));
         end if;
-        
-        ----------------------- READ ----------------------------
-        QA <= registers_tab(TO_INTEGER(UNSIGNED(addr_A)));
-        QB <= registers_tab(TO_INTEGER(UNSIGNED(addr_B)));
     end process;
 end Behavioral;

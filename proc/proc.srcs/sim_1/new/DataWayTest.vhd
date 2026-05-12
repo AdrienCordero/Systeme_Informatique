@@ -58,6 +58,7 @@ begin
         wait for clk_period/2;
     end process;
     
-    sIP <= "00000000", "00000001" after 100ns;
+    sIP <= "00000000", "00000001" after 100ns, "00000010" after 200ns, "00000011" after 300ns;
+
         
 end Behavioral;

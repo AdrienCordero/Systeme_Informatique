@@ -47,22 +47,22 @@ architecture Behavioral of DataMemory is
 begin
     process (CLK, RST)
     begin
-    
-        -- READ
-        if (RW = '1') then
-            OUTPUT <= memory_tab(TO_INTEGER(UNSIGNED(ADDR)));
+        if rising_edge(CLK) then
+            -- READ
+            if (RW = '1') then
+                OUTPUT <= memory_tab(TO_INTEGER(UNSIGNED(ADDR)));
+                
+            -- WRITE
+            else
+                memory_tab(TO_INTEGER(UNSIGNED(ADDR))) <= INPUT;
+            end if;
             
-        -- WRITE
-        else
-            memory_tab(TO_INTEGER(UNSIGNED(ADDR))) <= INPUT;
+            -- RST
+            if (RST = '0') then
+                OUTPUT <= "00000000";
+                memory_tab <= (others => "00000000");
+            end if;
         end if;
-        
-        -- RST
-        if (RST = '0') then
-            OUTPUT <= "00000000";
-            memory_tab <= (others => "00000000");
-        end if;
-    
     end process;
 
 end Behavioral;
