@@ -43,7 +43,6 @@ architecture Behavioral of DataWayTest is
     
     signal sCLK : STD_LOGIC := '0';
     signal sIP : STD_LOGIC_VECTOR(7 downto 0) := "00000001";
-    signal sOUTPUT_TEST : STD_LOGIC_VECTOR(7 downto 0);
     constant clk_period : time := 10ns;
     
 begin

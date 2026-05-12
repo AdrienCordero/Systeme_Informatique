@@ -2,5 +2,3 @@ INFO: [VRFC 10-163] Analyzing VHDL file "/home/cordero/Documents/SI/Systeme_Info
 INFO: [VRFC 10-3107] analyzing entity 'DataWay'
 INFO: [VRFC 10-163] Analyzing VHDL file "/home/cordero/Documents/SI/Systeme_Informatique/proc/proc.srcs/sources_1/new/InstructionMemory.vhd" into library xil_defaultlib
 INFO: [VRFC 10-3107] analyzing entity 'InstructionMemory'
-INFO: [VRFC 10-163] Analyzing VHDL file "/home/cordero/Documents/SI/Systeme_Informatique/proc/proc.srcs/sim_1/new/DataWayTest.vhd" into library xil_defaultlib
-INFO: [VRFC 10-3107] analyzing entity 'DataWayTest'

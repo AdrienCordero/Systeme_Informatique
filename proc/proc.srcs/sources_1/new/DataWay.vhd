@@ -119,6 +119,13 @@ architecture Behavioral of DataWay is
     signal sS : STD_LOGIC_VECTOR(7 downto 0);
     signal sOP : STD_LOGIC_VECTOR(7 downto 0);
     
+    signal sLIDIA : STD_LOGIC_VECTOR(7 downto 0);
+    signal sLIDIB : STD_LOGIC_VECTOR(7 downto 0);
+    signal sDIEXA : STD_LOGIC_VECTOR(7 downto 0);
+    signal sDIEXB : STD_LOGIC_VECTOR(7 downto 0);
+    signal sEXMEMA : STD_LOGIC_VECTOR(7 downto 0);
+    signal sEXMEMB : STD_LOGIC_VECTOR(7 downto 0);
+    
 begin
 
     instruction_memory : InstructionMemory PORT MAP(
@@ -163,34 +170,39 @@ begin
     begin
         sInstructionADDR <= STD_LOGIC_VECTOR(IP);
         
-        sRegisteraddr_A <= sInstructionOUTPUT(19 downto 16);
-        sRegisteraddr_B <= sInstructionOUTPUT(11 downto 8);
-        sRegisterOP <= sInstructionOUTPUT(31 downto 24);        
+        sLIDIA <= sInstructionOUTPUT(23 downto 16);
+        sLIDIB <= sInstructionOUTPUT(15 downto 8);
+        if sInstructionOUTPUT(31 downto 24) = "00000101" then
+            sRegisteraddr_A <= sInstructionOUTPUT(11 downto 8); -- COP
+        end if;
+        sRegisterOP <= sInstructionOUTPUT(31 downto 24); 
     end process;
     
     DI_EX : process(CLK)
     begin
-        sA <= "0000"&sRegisteraddr_A;
-        sB <= "0000"&sRegisteraddr_B;
+        sDIEXA <= sLIDIA;
+        case sRegisterOP is
+            when "00000101" => sDIEXB <= sRegisterQA; -- COP
+            when others => sDIEXB <= sLIDIB;
+        end case;
         sOP <= sRegisterOP;
     end process;
     
     EX_Mem : process(CLK)
     begin
-        sDMADDR <= sA;
-        sDMINPUT <= sB;
+        sEXMEMA <= sDIEXA;
+        sEXMEMB <= sDIEXB;
         sDMOP <= sOP;
     end process;
     
     Mem_RE : process(CLK)
     begin
-        sRegisteraddr_W <= sDMADDR(3 downto 0);
-        sRegisterDATA <= sDMINPUT;
-        if (sDMOP = "00000110") then
-            sRegisterW <= '1';
-        else
-            sRegisterW <= '0';
-        end if;
+        sRegisteraddr_W <= sEXMEMA(3 downto 0);
+        sRegisterDATA <= sEXMEMB;
+        case sDMOP is
+            when "00000110" => sRegisterW <= '1'; -- AFC
+            when "00000101" => sRegisterW <= '1'; -- COP
+            when others => sRegisterW <= '0';
+        end case;
     end process;
-    
 end Behavioral;
