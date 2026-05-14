@@ -45,6 +45,10 @@ architecture Behavioral of DataMemory is
     type array_logic_vector is array (0 to 256) OF STD_LOGIC_VECTOR(7 downto 0);
     signal memory_tab : array_logic_vector;
 begin
+
+    memory_tab(0) <= "00001000";
+    memory_tab(100) <= "00001010";
+
     process (CLK, RST)
     begin
         if rising_edge(CLK) then

@@ -33,10 +33,7 @@ use IEEE.numeric_std.all;
 --use UNISIM.VComponents.all;
 
 entity DataWay is
-    Port (
-        CLK : in STD_LOGIC;
-        IP : in STD_LOGIC_VECTOR(7 downto 0)
-    );
+    Port (CLK : in STD_LOGIC);
 end DataWay;
 
 architecture Behavioral of DataWay is
@@ -48,7 +45,7 @@ architecture Behavioral of DataWay is
         CLK : in STD_LOGIC;
         OUTPUT : out STD_LOGIC_VECTOR(31 downto 0));
     end component;
-    
+    signal IP : STD_LOGIC_VECTOR(7 downto 0) := "00000000";
     signal sInstructionADDR : STD_LOGIC_VECTOR(7 downto 0);
     signal sInstructionOUTPUT: STD_LOGIC_VECTOR(31 downto 0);
     signal sInstructionOP : STD_LOGIC_VECTOR(7 downto 0);
@@ -166,69 +163,83 @@ begin
         C => sC,
         S => sS 
     );
+    
+    pIP : process(CLK)
+    begin
+        if rising_edge(CLK) then
+            IP <= STD_LOGIC_VECTOR(UNSIGNED(IP) + 1);
+        end if;
+    end process;
          
     LI_DI : process (CLK)
     begin
         if rising_edge(CLK) then
             sInstructionADDR <= STD_LOGIC_VECTOR(IP);
-            
-            sLIDIA <= sInstructionOUTPUT(23 downto 16);
-            sLIDIB <= sInstructionOUTPUT(15 downto 8);
-            if sInstructionOUTPUT(31 downto 24) = "00000101" then   -- COP
-                sRegisteraddr_A <= sInstructionOUTPUT(11 downto 8);
-            elsif sInstructionOUTPUT(31 downto 24) = "00000001" or      -- ADD
-                    sInstructionOUTPUT(31 downto 24) = "00000010" or    -- MUL
-                    sInstructionOUTPUT(31 downto 24) = "00000011" or    -- SUB
-                    sInstructionOUTPUT(31 downto 24) = "00000100" then   -- DIV
-                sRegisteraddr_A <= sInstructionOUTPUT(11 downto 8);
-                sRegisteraddr_B <= sInstructionOUTPUT(3 downto 0);
+            if sInstructionOUTPUT(31 downto 24) /= "00000000" then
+                sLIDIA <= sInstructionOUTPUT(23 downto 16);
+                sLIDIB <= sInstructionOUTPUT(15 downto 8);
+                if sInstructionOUTPUT(31 downto 24) = "00000101" then   -- COP
+                    sRegisteraddr_A <= sInstructionOUTPUT(11 downto 8);
+                elsif sInstructionOUTPUT(31 downto 24) = "00000001" or      -- ADD
+                        sInstructionOUTPUT(31 downto 24) = "00000010" or    -- MUL
+                        sInstructionOUTPUT(31 downto 24) = "00000011" or    -- SUB
+                        sInstructionOUTPUT(31 downto 24) = "00000100" then   -- DIV
+                    sRegisteraddr_A <= sInstructionOUTPUT(11 downto 8);
+                    sRegisteraddr_B <= sInstructionOUTPUT(3 downto 0);
+                end if;
+                sRegisterOP <= sInstructionOUTPUT(31 downto 24); 
             end if;
-            sRegisterOP <= sInstructionOUTPUT(31 downto 24); 
         end if;
     end process;
     
     DI_EX : process(CLK)
     begin
         if rising_edge(CLK) then
-            sDIEXA <= sLIDIA;
-            if sRegisterOP = "00000110" then -- AFC
-                sDIEXB <= sLIDIB;
-            elsif sRegisterOP = "00000101" then -- COP
-                sDIEXB <= sRegisterQA;
-            elsif sRegisterOP = "00000001" or -- ADD
-                sRegisterOP = "00000010" or -- MUL
-                sRegisterOP = "00000011" or -- SUB
-                sRegisterOP = "00000100" then -- DIV
-                sB <= sRegisterQB;
-                sA <= sRegisterQA;
-                sCtrl_Alu <= sRegisterOP(2 downto 0);
+            if sRegisterOP /= "00000000" then
+                sDIEXA <= sLIDIA;
+                if sRegisterOP = "00000110" then -- AFC
+                    sDIEXB <= sLIDIB;
+                elsif sRegisterOP = "00000101" then -- COP
+                    sDIEXB <= sRegisterQA;
+                elsif sRegisterOP = "00000001" or -- ADD
+                    sRegisterOP = "00000010" or -- MUL
+                    sRegisterOP = "00000011" or -- SUB
+                    sRegisterOP = "00000100" then -- DIV
+                    sB <= sRegisterQB;
+                    sA <= sRegisterQA;
+                    sCtrl_Alu <= sRegisterOP(2 downto 0);
+                end if;
+                sOP <= sRegisterOP;
             end if;
-            sOP <= sRegisterOP;
         end if;
     end process;
     
     EX_Mem : process(CLK)
     begin
         if rising_edge(CLK) then
-            sEXMEMA <= sDIEXA;
-            if sOP = "00000001" or -- ADD
-                sOP = "00000010" or -- MUL
-                sOP = "00000011" or -- SUB
-                sOP = "00000100" then -- DIV
-                sEXMEMB <= sS;
-            else
-                sEXMEMB <= sDIEXB;  -- AFC COP
-            end if;
-            sDMOP <= sOP;
+            if sOP /= "00000000" then
+                sEXMEMA <= sDIEXA;
+                if sOP = "00000001" or -- ADD
+                    sOP = "00000010" or -- MUL
+                    sOP = "00000011" or -- SUB
+                    sOP = "00000100" then -- DIV
+                    sEXMEMB <= sS;
+                else
+                    sEXMEMB <= sDIEXB;  -- AFC COP
+                end if;
+                sDMOP <= sOP;
+                end if;
         end if;
     end process;
     
     Mem_RE : process(CLK)
     begin
         if rising_edge(CLK) then
-            sRegisteraddr_W <= sEXMEMA(3 downto 0);
-            sRegisterDATA <= sEXMEMB;
-            sRegisterW <= '1';
+            if sDMOP /= "00000000" then
+                sRegisteraddr_W <= sEXMEMA(3 downto 0);
+                sRegisterDATA <= sEXMEMB;
+                sRegisterW <= '1';
+            end if;
         end if;
     end process;
 end Behavioral;

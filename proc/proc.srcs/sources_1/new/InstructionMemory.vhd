@@ -39,14 +39,20 @@ entity InstructionMemory is
 end InstructionMemory;
 
 architecture Behavioral of InstructionMemory is
-    type array_logic_vector is array (0 to 256) OF STD_LOGIC_VECTOR(31 downto 0);
-    signal instruction_tab : array_logic_vector;
-begin
-    
-    instruction_tab(0) <= "00000110"&"00000010"&"00000001"&"00000000"; -- Mettre 1 dans r2
-    instruction_tab(1) <= "00000101"&"00000011"&"00000010"&"00000000"; -- Copier r2 dans r3
-    instruction_tab(2) <= "00000001"&"00000100"&"00000011"&"00000010"; -- r2 + r3 dans r4
-    instruction_tab(3) <= "00000010"&"00000101"&"00000100"&"00000011"; -- r4 * r3 dans r5
+    type array_logic_vector is array (0 to 255) OF STD_LOGIC_VECTOR(31 downto 0);
+    signal instruction_tab : array_logic_vector := (others => "00000000000000000000000000000000");
+begin    
+    instruction_tab(1) <= "00000110"&"00000010"&"00000001"&"00000000"; -- Mettre 1 dans r2
+    instruction_tab(2) <= "00000110"&"00000011"&"00000010"&"00000000"; -- Mettre 2 dans r3
+    -- NOP
+    -- NOP
+    -- NOP
+    instruction_tab(6) <= "00000001"&"00000100"&"00000011"&"00000010"; -- r2 + r3 dans r4
+    -- NOP
+    -- NOP
+    -- NOP
+    instruction_tab(10) <= "00000010"&"00000101"&"00000100"&"00000011"; -- r4 * r3 dans r5
+    instruction_tab(11) <= "00000101"&"00000110"&"00000010"&"00000000"; -- Copier r2 dans r6
     
     process(CLK)
     begin

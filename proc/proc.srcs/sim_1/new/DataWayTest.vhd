@@ -36,20 +36,16 @@ entity DataWayTest is
 end DataWayTest;
 
 architecture Behavioral of DataWayTest is
-    component DataWay is port(
-        CLK : in STD_LOGIC;
-        IP : in STD_LOGIC_VECTOR(7 downto 0));
+    component DataWay is port( CLK : in STD_LOGIC);
     end component;
     
-    signal sCLK : STD_LOGIC := '0';
-    signal sIP : STD_LOGIC_VECTOR(7 downto 0) := "00000001";
+    signal sCLK : STD_LOGIC := '1';
     constant clk_period : time := 10ns;
     
 begin
 
     obj : DataWay PORT MAP (
-        CLK => sCLK,
-        IP => sIP
+        CLK => sCLK
     );
     
     process
@@ -58,7 +54,7 @@ begin
         wait for clk_period/2;
     end process;
     
-    sIP <= "00000000", "00000001" after 100ns, "00000010" after 200ns, "00000011" after 300ns;
+    --sIP <= "00000000", "00000001" after 100ns, "00000010" after 200ns, "00000011" after 300ns;
 
         
 end Behavioral;
