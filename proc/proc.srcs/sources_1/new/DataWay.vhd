@@ -197,9 +197,10 @@ begin
         if rising_edge(CLK) then
             if sRegisterOP /= "00000000" then
                 sDIEXA <= sLIDIA;
-                if sRegisterOP = "00000110" then -- AFC
+                if sRegisterOP = "00000110" or -- AFC
+                   sRegisterOP = "00001101" then -- LOAD
                     sDIEXB <= sLIDIB;
-                elsif sRegisterOP = "00000101" then -- COP
+                elsif sRegisterOP = "00000101" then   -- COP
                     sDIEXB <= sRegisterQA;
                 elsif sRegisterOP = "00000001" or -- ADD
                     sRegisterOP = "00000010" or -- MUL
@@ -224,11 +225,14 @@ begin
                     sOP = "00000011" or -- SUB
                     sOP = "00000100" then -- DIV
                     sEXMEMB <= sS;
+                elsif sOP = "00001101" then -- LOAD
+                    sDMaddr <= sDIEXB;
+                    sDMRW <= '1';
                 else
                     sEXMEMB <= sDIEXB;  -- AFC COP
                 end if;
                 sDMOP <= sOP;
-                end if;
+            end if;
         end if;
     end process;
     
@@ -236,9 +240,15 @@ begin
     begin
         if rising_edge(CLK) then
             if sDMOP /= "00000000" then
-                sRegisteraddr_W <= sEXMEMA(3 downto 0);
-                sRegisterDATA <= sEXMEMB;
-                sRegisterW <= '1';
+                if sDMOP = "00001101" then
+                    sRegisteraddr_W <= sEXMEMA(3 downto 0);
+                    sRegisterDATA <= sDMOUTPUT;
+                    sRegisterW <= '1';
+                else
+                    sRegisteraddr_W <= sEXMEMA(3 downto 0);
+                    sRegisterDATA <= sEXMEMB;
+                    sRegisterW <= '1';
+                end if;
             end if;
         end if;
     end process;
