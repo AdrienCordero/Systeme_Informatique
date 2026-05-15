@@ -35,7 +35,7 @@ use IEEE.numeric_std.all;
 entity DataMemory is
     Port ( ADDR : in STD_LOGIC_VECTOR(7 downto 0);
            INPUT : in STD_LOGIC_VECTOR(7 downto 0);
-           RW : in STD_LOGIC;
+           RW : in STD_LOGIC := '1';
            RST : in STD_LOGIC;
            CLK : in STD_LOGIC;
            OUTPUT : out STD_LOGIC_VECTOR(7 downto 0));
@@ -43,12 +43,12 @@ end DataMemory;
 
 architecture Behavioral of DataMemory is
     type array_logic_vector is array (0 to 256) OF STD_LOGIC_VECTOR(7 downto 0);
-    signal memory_tab : array_logic_vector := (others => "00000000");
+    signal memory_tab : array_logic_vector := (
+        1 => "00001000",
+        2 => "00000100",
+        3 => "00001010",
+        others => "00000000");
 begin
-
-    memory_tab(1) <= "00001000";
-    memory_tab(3) <= "00001010";
-
     process (CLK, RST)
     begin
         if rising_edge(CLK) then
@@ -64,7 +64,7 @@ begin
             -- RST
             if (RST = '0') then
                 OUTPUT <= "00000000";
-                memory_tab <= (others => "00000000");
+                --memory_tab <= (others => "00000000");
             end if;
         end if;
     end process;

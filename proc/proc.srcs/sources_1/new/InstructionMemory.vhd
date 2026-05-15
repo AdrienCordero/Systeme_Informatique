@@ -54,9 +54,9 @@ begin
     instruction_tab(10) <= "00000010"&"00000101"&"00000100"&"00000011"; -- r4 * r3 dans r5
     instruction_tab(11) <= "00000101"&"00000110"&"00000010"&"00000000"; -- Copier r2 dans r6
     -- NOP
-    instruction_tab(13) <= "00001101"&"00000111"&"00000001"&"00000000"; -- Load 0x1 dans r7
+    instruction_tab(13) <= "00001101"&"00000111"&"00000001"&"00000000"; -- Load 0x1 (8) dans r7
     -- NOP
-    instruction_tab(15) <= "00001101"&"00001000"&"00000011"&"00000000"; -- Load 0x3 dans r8
+    instruction_tab(15) <= "00001101"&"00001000"&"00000011"&"00000000"; -- Load 0x3 (11) dans r8
     
     process(CLK)
     begin
