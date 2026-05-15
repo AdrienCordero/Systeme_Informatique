@@ -178,7 +178,8 @@ begin
             if sInstructionOUTPUT(31 downto 24) /= "00000000" then
                 sLIDIA <= sInstructionOUTPUT(23 downto 16);
                 sLIDIB <= sInstructionOUTPUT(15 downto 8);
-                if sInstructionOUTPUT(31 downto 24) = "00000101" then   -- COP
+                if sInstructionOUTPUT(31 downto 24) = "00000101" or   -- COP
+                   sInstructionOUTPUT(31 downto 24) = "00001110" then -- STR
                     sRegisteraddr_A <= sInstructionOUTPUT(11 downto 8);
                 elsif sInstructionOUTPUT(31 downto 24) = "00000001" or      -- ADD
                         sInstructionOUTPUT(31 downto 24) = "00000010" or    -- MUL
@@ -197,10 +198,8 @@ begin
         if rising_edge(CLK) then
             if sRegisterOP /= "00000000" then
                 sDIEXA <= sLIDIA;
-                if sRegisterOP = "00000110" or -- AFC
-                   sRegisterOP = "00001101" then -- LOAD
-                    sDIEXB <= sLIDIB;
-                elsif sRegisterOP = "00000101" then   -- COP
+               if sRegisterOP = "00000101" or   -- COP
+                  sRegisterOP = "00001110" then -- STR
                     sDIEXB <= sRegisterQA;
                 elsif sRegisterOP = "00000001" or -- ADD
                     sRegisterOP = "00000010" or -- MUL
@@ -209,6 +208,8 @@ begin
                     sB <= sRegisterQB;
                     sA <= sRegisterQA;
                     sCtrl_Alu <= sRegisterOP(2 downto 0);
+                else
+                    sDIEXB <= sLIDIB;
                 end if;
                 sOP <= sRegisterOP;
             end if;
@@ -228,6 +229,10 @@ begin
                 elsif sOP = "00001101" then -- LOAD
                     sDMaddr <= sDIEXB;
                     sDMRW <= '1';
+                elsif sOP = "00001110" then -- STR
+                    sDMaddr <= sDIEXA;
+                    sDMINPUT <= sDIEXB;
+                    sDMRW <= '0';
                 else
                     sEXMEMB <= sDIEXB;  -- AFC COP
                 end if;
@@ -240,7 +245,9 @@ begin
     begin
         if rising_edge(CLK) then
             if sDMOP /= "00000000" then
-                if sDMOP = "00001101" then
+                if sDMOP  = "00001110" then -- STR
+                    sRegisterW <= '0';
+                elsif sDMOP = "00001101" then -- LDR
                     sRegisteraddr_W <= sEXMEMA(3 downto 0);
                     sRegisterDATA <= sDMOUTPUT;
                     sRegisterW <= '1';
